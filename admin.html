@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sió Viu – Afegir Notícia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blau: #2D3FE0;
+      --blau-fosc: #001f6b;
+      --groc: #FFD200;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #f5f6fa;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    header {
+      width: 100%;
+      max-width: 640px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    header img { height: 48px; }
+
+    header h1 {
+      font-family: 'Anton', sans-serif;
+      font-size: 1.4rem;
+      color: var(--blau-fosc);
+      letter-spacing: .05em;
+    }
+
+    /* ── Login overlay ── */
+    #login-wrap {
+      background: #fff;
+      border-radius: 8px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    #login-wrap h2 {
+      font-family: 'Anton', sans-serif;
+      color: var(--blau);
+      font-size: 1.2rem;
+      letter-spacing: .05em;
+    }
+
+    #login-err {
+      color: #c00;
+      font-size: .8rem;
+      display: none;
+    }
+
+    /* ── Admin panel ── */
+    #admin-wrap {
+      width: 100%;
+      max-width: 640px;
+      display: none;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .panel {
+      background: #fff;
+      border-radius: 8px;
+      padding: 2rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,.08);
+    }
+
+    .panel h2 {
+      font-family: 'Anton', sans-serif;
+      color: var(--blau);
+      font-size: 1.1rem;
+      letter-spacing: .05em;
+      margin-bottom: 1.4rem;
+      padding-bottom: .6rem;
+      border-bottom: 2px solid var(--groc);
+    }
+
+    label {
+      display: block;
+      font-size: .78rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: .3rem;
+      margin-top: 1rem;
+    }
+
+    label:first-of-type { margin-top: 0; }
+
+    input[type="text"],
+    input[type="url"],
+    input[type="password"],
+    textarea {
+      width: 100%;
+      padding: .65rem .8rem;
+      border: 1.5px solid #dde;
+      border-radius: 5px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: .82rem;
+      color: #111;
+      transition: border-color .2s;
+      resize: vertical;
+    }
+
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--blau);
+    }
+
+    textarea { min-height: 110px; }
+
+    .hint {
+      font-size: .72rem;
+      color: #888;
+      margin-top: .25rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: .7rem 1.8rem;
+      background: var(--blau);
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      font-size: .85rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 1.4rem;
+      transition: background .2s;
+    }
+
+    .btn:hover { background: var(--blau-fosc); }
+    .btn:disabled { opacity: .55; cursor: default; }
+
+    #form-msg {
+      margin-top: 1rem;
+      font-size: .82rem;
+      font-weight: 700;
+      display: none;
+    }
+
+    .msg-ok  { color: #1a8a1a; }
+    .msg-err { color: #c00; }
+
+    /* ── Notícies publicades ── */
+    #llista-noticies { display: flex; flex-direction: column; gap: .8rem; margin-top: .5rem; }
+
+    .admin-noticia {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: .8rem 1rem;
+      border: 1px solid #eee;
+      border-radius: 5px;
+      font-size: .8rem;
+    }
+
+    .admin-noticia-info h6 { font-size: .82rem; margin-bottom: .2rem; color: #111; }
+    .admin-noticia-info span { color: #888; font-size: .73rem; }
+
+    .btn-delete {
+      background: none;
+      border: 1.5px solid #c00;
+      color: #c00;
+      font-size: .72rem;
+      font-weight: 700;
+      padding: .3rem .7rem;
+      border-radius: 4px;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: background .15s, color .15s;
+    }
+
+    .btn-delete:hover { background: #c00; color: #fff; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="images/logo-sioviu.png" alt="Sió Viu">
+    <h1>PANELL D'ADMINISTRADOR</h1>
+  </header>
+
+  <!-- LOGIN -->
+  <div id="login-wrap">
+    <h2>Accés restringit</h2>
+    <p id="login-err">Contrasenya incorrecta.</p>
+    <label for="pwd">Contrasenya</label>
+    <input type="password" id="pwd" placeholder="···">
+    <button class="btn" id="login-btn">Entrar</button>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="admin-wrap">
+
+    <!-- Formulari afegir notícia -->
+    <div class="panel">
+      <h2>AFEGIR NOTÍCIA</h2>
+
+      <label for="titol">Títol *</label>
+      <input type="text" id="titol" placeholder="Títol de la notícia">
+
+      <label for="cos">Cos / descripció *</label>
+      <textarea id="cos" placeholder="Text de la notícia..."></textarea>
+
+      <label for="imatge_url">URL de la imatge</label>
+      <input type="url" id="imatge_url" placeholder="https://...">
+      <p class="hint">Puja la foto a Google Drive o Imgur i enganxa l'enllaç directe aquí.</p>
+
+      <label for="link">Enllaç extern (opcional)</label>
+      <input type="url" id="link" placeholder="https://...">
+      <p class="hint">Notícia original, article de premsa, etc.</p>
+
+      <button class="btn" id="submit-btn">Publicar notícia</button>
+      <p id="form-msg"></p>
+    </div>
+
+    <!-- Llista de notícies publicades -->
+    <div class="panel">
+      <h2>NOTÍCIES PUBLICADES</h2>
+      <div id="llista-noticies">
+        <p style="color:#888;font-size:.82rem">Carregant...</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    /* ── Credencials Supabase ── */
+    const SUPA_URL = 'https://kvpqemvhhprtyfzdmcjq.supabase.co';
+    const SUPA_KEY = 'sb_publishable_FOX_rvKBWKzeif7movnuTA_9ImVIFzt';
+
+    /* ── Contrasenya local (canvia-la!) ── */
+    const ADMIN_PASS = 'sioviu2024';
+
+    /* ── Login ── */
+    const loginWrap = document.getElementById('login-wrap');
+    const adminWrap = document.getElementById('admin-wrap');
+    const loginErr  = document.getElementById('login-err');
+
+    document.getElementById('login-btn').addEventListener('click', () => {
+      const val = document.getElementById('pwd').value;
+      if (val === ADMIN_PASS) {
+        loginWrap.style.display = 'none';
+        adminWrap.style.display = 'flex';
+        carregaLlista();
+      } else {
+        loginErr.style.display = 'block';
+      }
+    });
+
+    document.getElementById('pwd').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('login-btn').click();
+    });
+
+    /* ── Afegir notícia ── */
+    const msg = document.getElementById('form-msg');
+
+    document.getElementById('submit-btn').addEventListener('click', async () => {
+      const titol      = document.getElementById('titol').value.trim();
+      const cos        = document.getElementById('cos').value.trim();
+      const imatge_url = document.getElementById('imatge_url').value.trim() || null;
+      const link       = document.getElementById('link').value.trim() || null;
+
+      if (!titol || !cos) {
+        showMsg('Els camps Títol i Cos són obligatoris.', false);
+        return;
+      }
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Publicant...';
+
+      try {
+        const res = await fetch(`${SUPA_URL}/rest/v1/noticies`, {
+          method: 'POST',
+          headers: {
+            apikey: SUPA_KEY,
+            Authorization: `Bearer ${SUPA_KEY}`,
+            'Content-Type': 'application/json',
+            Prefer: 'return=minimal'
+          },
+          body: JSON.stringify({ titol, cos, imatge_url, link })
+        });
+
+        if (!res.ok) throw new Error(await res.text());
+
+        showMsg('Notícia publicada correctament!', true);
+        document.getElementById('titol').value = '';
+        document.getElementById('cos').value = '';
+        document.getElementById('imatge_url').value = '';
+        document.getElementById('link').value = '';
+        carregaLlista();
+
+      } catch (e) {
+        showMsg('Error en publicar: ' + e.message, false);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Publicar notícia';
+      }
+    });
+
+    function showMsg(text, ok) {
+      msg.textContent = text;
+      msg.className   = ok ? 'msg-ok' : 'msg-err';
+      msg.style.display = 'block';
+      setTimeout(() => { msg.style.display = 'none'; }, 5000);
+    }
+
+    /* ── Llista i eliminar ── */
+    async function carregaLlista() {
+      const llista = document.getElementById('llista-noticies');
+      llista.innerHTML = '<p style="color:#888;font-size:.82rem">Carregant...</p>';
+
+      const res = await fetch(
+        `${SUPA_URL}/rest/v1/noticies?select=id,titol,created_at&order=created_at.desc`,
+        { headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` } }
+      );
+      const noticies = await res.json();
+
+      if (!noticies.length) {
+        llista.innerHTML = '<p style="color:#888;font-size:.82rem">Sense notícies.</p>';
+        return;
+      }
+
+      llista.innerHTML = noticies.map(n => `
+        <div class="admin-noticia">
+          <div class="admin-noticia-info">
+            <h6>${n.titol}</h6>
+            <span>${new Date(n.created_at).toLocaleDateString('ca-ES')}</span>
+          </div>
+          <button class="btn-delete" onclick="elimina('${n.id}')">Eliminar</button>
+        </div>
+      `).join('');
+    }
+
+    async function elimina(id) {
+      if (!confirm('Segur que vols eliminar aquesta notícia?')) return;
+      await fetch(`${SUPA_URL}/rest/v1/noticies?id=eq.${id}`, {
+        method: 'DELETE',
+        headers: { apikey: SUPA_KEY, Authorization: `Bearer ${SUPA_KEY}` }
+      });
+      carregaLlista();
+    }
+  </script>
+
+</body>
+</html>

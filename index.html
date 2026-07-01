@@ -14,6 +14,8 @@
 
   <!-- HERO (inclou nav) -->
   <header class="hero" id="inici">
+  <div class="hero-slide active"></div>
+  <div class="hero-slide"></div>
   <nav id="navbar">
     <div class="nav-left">
       <a href="#inici"><img src="images/logo-sioviu.png" alt="Sió Viu"></a>
@@ -52,7 +54,9 @@
         <div>
           <h3 class="col-h">La plataforma</h3>
           <p>Som veïns i veïnes organitzats des del voluntariat i <strong>sense ànim de lucre</strong>, que treballem per aturar els macroprojectes industrials de biogàs que afecten directament els nostres pobles, posant en risc la qualitat de vida de tots i el futur del nostre entorn.</p>
-          <img src="images/manifest.jpg" alt="Manifest Sió Viu" class="img-fluid img-manifest">
+          <a href="https://drive.google.com/file/d/14WdQXGDDqqp4h4SRnk9ei1GSjQGRIkmq/view?usp=sharing" target="_blank" rel="noopener">
+            <img src="images/manifest.jpg" alt="Manifest Sió Viu" class="img-fluid img-manifest">
+          </a>
         </div>
       </div>
     </div>
@@ -134,7 +138,7 @@
           </div>
           <h4><strong>Fes-te soci/a de l'associació</strong></h4>
           <p>Amb una quota anual mínima (0,33 €/dia) ajudes a mantenir l'estructura de la plataforma de forma permanent.</p>
-          <a href="#" class="icard-link">Click aquí per associar-te</a>
+          <a href="https://docs.google.com/forms/d/e/1FAIpQLSe-_aBpPkeDNljORLU0OmRoRNFpzc9yJgrdznJEqAM4DNzeQg/viewform" target="_blank" rel="noopener" class="icard-link">Click aquí per associar-te</a>
         </div>
         <div class="icard">
           <div class="icard-icon">
@@ -172,77 +176,19 @@
     <div class="container">
       <div class="noticies-grid">
 
-        <!-- Notícies -->
+        <!-- Notícies dinàmiques (Supabase) -->
         <div class="noticies-col">
           <h3 class="col-sub-h">Notícies Relacionades</h3>
-          <div class="segre-header">SEGRE</div>
-
-          <article class="noticia-item">
-            <div class="noticia-media">
-              <img src="images/noticia-segre.png" alt="Manifestació Tarroja" class="noticia-foto">
-            </div>
-            <div class="noticia-body">
-              <span class="noticia-tag">MEDI</span>
-              <h5>Mobilització contra dos plantes de biogàs a Tarroja de Segarra</h5>
-              <p class="noticia-meta">LAIA PEDRÓS · 30.11.2025 | 05:38</p>
-            </div>
-          </article>
-
-          <article class="noticia-item">
-            <div class="noticia-media">
-              <img src="images/noticia-ara.png" alt="Planta biogàs" class="noticia-foto">
-            </div>
-            <div class="noticia-body">
-              <span class="noticia-tag">TARROJA</span>
-              <h5>Projecten una planta de biogàs a Tarroja de Segarra que generarà vint llocs de treball</h5>
-              <p class="noticia-meta">XAVI SANTESMASSES · 22.03.2024 | 10:29</p>
-              <p class="noticia-excerpt">Per obtenir biometà de fins a 200.000 tones anuals de residus ramaders. S'ubicaria en un punt estratègic, que té una gran cabanya tant de bestiar porcí com de boví</p>
-            </div>
-          </article>
+          <div id="noticies-dinamiques">
+            <p style="color:#888;font-size:.85rem">Carregant notícies...</p>
+          </div>
         </div>
 
-        <!-- Accions -->
+        <!-- Accions dinàmiques -->
         <div class="accions-col">
           <h3 class="col-sub-h">Accions</h3>
-          <ul class="accions-list">
-            <li class="accio-item">
-              <div class="accio-cal">
-                <span class="accio-mes">June</span>
-                <span class="accio-dia">1</span>
-              </div>
-              <div class="accio-body">
-                <h5>Caminada popular per... desde Tarroja fins a... PARTICIPA i fes el teu donatiu</h5>
-                <a href="#">Participa →</a>
-              </div>
-            </li>
-            <li class="accio-item">
-              <div class="accio-cal">
-                <span class="accio-mes">June</span>
-                <span class="accio-dia">5</span>
-              </div>
-              <div class="accio-body">
-                <h5>Assemblea General de socis</h5>
-              </div>
-            </li>
-            <li class="accio-item">
-              <div class="accio-cal">
-                <span class="accio-mes">June</span>
-                <span class="accio-dia">8</span>
-              </div>
-              <div class="accio-body">
-                <h5>Assistència al ple de l'Ajuntament de Cervera</h5>
-              </div>
-            </li>
-            <li class="accio-item">
-              <div class="accio-cal">
-                <span class="accio-mes">June</span>
-                <span class="accio-dia">17</span>
-              </div>
-              <div class="accio-body">
-                <h5>Cinema d'estiu a la fresca</h5>
-                <a href="#">Participa →</a>
-              </div>
-            </li>
+          <ul class="accions-list" id="accions-list">
+            <li style="color:#888;font-size:.82rem;padding:.5rem 0">Carregant...</li>
           </ul>
         </div>
 
@@ -280,6 +226,92 @@
     </div>
   </footer>
 
+  <!-- MODAL ADMIN (triple-click logo) -->
+  <div id="admin-modal" class="admin-overlay" role="dialog" aria-modal="true" style="display:none">
+    <div class="admin-box">
+      <button class="admin-close" id="admin-close" aria-label="Tancar">×</button>
+
+      <!-- Pas 1: contrasenya -->
+      <div id="admin-step-pwd">
+        <h3>ACCÉS ADMIN</h3>
+        <div class="admin-field">
+          <label for="admin-pwd">Contrasenya</label>
+          <input type="password" id="admin-pwd" placeholder="···" autocomplete="current-password">
+        </div>
+        <p class="admin-err" id="admin-pwd-err">Contrasenya incorrecta.</p>
+        <button class="admin-btn" id="admin-pwd-btn">Entrar</button>
+      </div>
+
+      <!-- Pas 2: panel CRUD -->
+      <div id="admin-step-form" style="display:none">
+        <div class="admin-tabs">
+          <button class="admin-tab active" data-tab="noticia">Notícies</button>
+          <button class="admin-tab" data-tab="accio">Accions</button>
+        </div>
+
+        <!-- NOTÍCIES -->
+        <div id="admin-panel-noticia">
+          <h3 id="noticia-form-h">NOVA NOTÍCIA</h3>
+          <div class="admin-field">
+            <label for="a-titol">Títol *</label>
+            <input type="text" id="a-titol" placeholder="Títol de la notícia">
+          </div>
+          <div class="admin-field">
+            <label for="a-cos">Cos / descripció *</label>
+            <textarea id="a-cos" placeholder="Text de la notícia..."></textarea>
+          </div>
+          <div class="admin-field">
+            <label for="a-imatge">URL de la imatge</label>
+            <input type="url" id="a-imatge" placeholder="https://...">
+            <p class="admin-hint">Puja la foto a Google Drive o Imgur i enganxa l'enllaç directe.</p>
+          </div>
+          <div class="admin-field">
+            <label for="a-link">Enllaç extern</label>
+            <input type="url" id="a-link" placeholder="https://...">
+          </div>
+          <p class="admin-err" id="admin-noticia-err"></p>
+          <p class="admin-ok"  id="admin-noticia-ok"></p>
+          <div class="admin-form-actions">
+            <button class="admin-btn" id="admin-noticia-btn">Publicar</button>
+            <button class="admin-btn-secondary" id="admin-noticia-cancel" style="display:none">Cancel·lar edició</button>
+          </div>
+
+          <hr class="admin-sep">
+          <h3>PUBLICADES</h3>
+          <div id="admin-noticies-list"><p style="color:#888;font-size:.8rem">Carregant...</p></div>
+        </div>
+
+        <!-- ACCIONS -->
+        <div id="admin-panel-accio" style="display:none">
+          <h3 id="accio-form-h">NOVA ACCIÓ</h3>
+          <div class="admin-field">
+            <label for="ac-titol">Títol *</label>
+            <input type="text" id="ac-titol" placeholder="Nom de l'acció o event">
+          </div>
+          <div class="admin-field">
+            <label for="ac-data">Data *</label>
+            <input type="date" id="ac-data">
+          </div>
+          <div class="admin-field">
+            <label for="ac-link">Enllaç (opcional)</label>
+            <input type="url" id="ac-link" placeholder="https://...">
+          </div>
+          <p class="admin-err" id="admin-accio-err"></p>
+          <p class="admin-ok"  id="admin-accio-ok"></p>
+          <div class="admin-form-actions">
+            <button class="admin-btn" id="admin-accio-btn">Publicar acció</button>
+            <button class="admin-btn-secondary" id="admin-accio-cancel" style="display:none">Cancel·lar edició</button>
+          </div>
+
+          <hr class="admin-sep">
+          <h3>PUBLICADES</h3>
+          <div id="admin-accions-list"><p style="color:#888;font-size:.8rem">Carregant...</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="js/main.js"></script>
+  <script src="js/news.js"></script>
 </body>
 </html>

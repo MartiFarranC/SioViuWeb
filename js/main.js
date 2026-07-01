@@ -2,6 +2,27 @@
    SIÓ VIU – main.js
    ═══════════════════════════════════════════ */
 
+// ─── Navbar: fons en fer scroll ───
+(function () {
+  const nav = document.getElementById('navbar');
+  if (!nav) return;
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 10);
+  }, { passive: true });
+})();
+
+// ─── Hero slideshow ───
+(function () {
+  const slides = document.querySelectorAll('.hero-slide');
+  if (!slides.length) return;
+  let current = 0;
+  setInterval(() => {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  }, 5000);
+})();
+
 // ─── Burger menu (mobile) ───
 const burger   = document.getElementById('navBurger');
 const navLinks = document.querySelector('.nav-links');
