@@ -127,3 +127,29 @@ function carregaLeaflet() {
 }
 
 carregaLeaflet();
+
+// ─── Hero: ajusta cada línia perquè ocupi exactament la mateixa amplada ───
+function fitHeroText() {
+  const container = document.querySelector('.hero-text');
+  if (!container) return;
+  const cs = getComputedStyle(container);
+  const w = container.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  const spans = [...container.querySelectorAll('span')];
+
+  const sizes = spans.map(span => {
+    span.style.whiteSpace = 'nowrap';
+    span.style.fontSize = '100px';
+    const size = Math.floor((w / span.scrollWidth) * 100);
+    span.style.whiteSpace = '';
+    return size;
+  });
+
+  spans.forEach((span, i) => { span.style.fontSize = sizes[i] + 'px'; });
+}
+
+if (document.fonts) {
+  document.fonts.ready.then(fitHeroText);
+} else {
+  window.addEventListener('load', fitHeroText);
+}
+window.addEventListener('resize', fitHeroText);
