@@ -32,15 +32,16 @@ async function carregaNoticies() {
     const data = await res.json();
     if (!data.length) { el.innerHTML = '<p style="color:#888;font-size:.85rem">Properament...</p>'; return; }
     el.innerHTML = data.map(n => `
-      <article class="noticia-item">
-        ${n.imatge_url ? `<div class="noticia-media"><img src="${n.imatge_url}" alt="${esc(n.titol)}" class="noticia-foto"></div>` : ''}
-        <div class="noticia-body">
-          <h5>${n.titol}</h5>
-          <p class="noticia-meta">${new Date(n.created_at).toLocaleDateString('ca-ES',{day:'2-digit',month:'2-digit',year:'numeric'})}</p>
-          ${n.cos ? `<p class="noticia-excerpt">${n.cos}</p>` : ''}
-          ${n.link ? `<a href="${n.link}" target="_blank" rel="noopener" class="arrow-link" style="font-size:.8rem">Llegir més →</a>` : ''}
+      <div class="noticia-card">
+        <div class="noticia-card-img">
+          ${n.imatge_url ? `<img src="${esc(n.imatge_url)}" alt="${esc(n.titol)}">` : ''}
         </div>
-      </article>`).join('');
+        <div class="noticia-card-body">
+          <h4 class="noticia-card-title">${esc(n.titol)}</h4>
+          ${n.cos ? `<p class="noticia-card-excerpt">${esc(n.cos).substring(0,120)}${n.cos.length>120?'…':''}</p>` : ''}
+          ${n.link ? `<a href="${esc(n.link)}" target="_blank" rel="noopener" class="arrow-link" style="font-size:.78rem;margin-top:.3rem">Llegir més →</a>` : ''}
+        </div>
+      </div>`).join('');
   } catch { el.innerHTML = '<p style="color:#888;font-size:.85rem">Error carregant notícies.</p>'; }
 }
 

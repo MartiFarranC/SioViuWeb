@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Antonio:wght@300;400;700&family=Montserrat:wght@600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=2">
 </head>
 <body>
 
@@ -174,26 +174,20 @@
   <!-- NOTÍCIES I ACCIONS -->
   <section class="noticies" id="noticies">
     <div class="container">
-      <div class="noticies-grid">
+      <h2 class="section-h">Notícies i Accions</h2>
 
-        <!-- Notícies dinàmiques (Supabase) -->
-        <div class="noticies-col">
-          <h3 class="col-sub-h">Notícies Relacionades</h3>
-          <div id="noticies-dinamiques">
-            <p style="color:#888;font-size:.85rem">Carregant notícies...</p>
-          </div>
-        </div>
-
-        <!-- Accions dinàmiques -->
-        <div class="accions-col">
-          <h3 class="col-sub-h">Accions</h3>
-          <ul class="accions-list" id="accions-list">
-            <li style="color:#888;font-size:.82rem;padding:.5rem 0">Carregant...</li>
-          </ul>
-        </div>
-
+      <!-- Cards de notícies (Supabase) -->
+      <div id="noticies-dinamiques" class="noticies-cards-grid">
+        <p style="color:#888;font-size:.85rem">Carregant notícies...</p>
       </div>
+
       <a href="#" class="btn btn-outline-blue mostra-mes">Mostra'n més</a>
+
+      <!-- Accions dinàmiques -->
+      <h3 class="col-sub-h" style="margin-top:3rem">Accions</h3>
+      <ul class="accions-list" id="accions-list">
+        <li style="color:#888;font-size:.82rem;padding:.5rem 0">Carregant...</li>
+      </ul>
     </div>
   </section>
 
@@ -312,6 +306,6 @@
   </div>
 
   <script src="js/main.js?v=3"></script>
-  <script src="js/news.js?v=2"></script>
+  <script src="js/news.js?v=3"></script>
 </body>
 </html>
