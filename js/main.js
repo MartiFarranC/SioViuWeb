@@ -38,13 +38,17 @@ if (burger && navLinks) {
 const sections = document.querySelectorAll('section[id], header[id]');
 const navItems = document.querySelectorAll('.nav-links a');
 
+const sectionNavMap = { 'per-que': 'el-projecte' };
+
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      navItems.forEach(a => a.classList.remove('nav-active'));
-      const active = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
-      if (active) active.classList.add('nav-active');
-      else navItems[0].classList.add('nav-active');
+      const navId = sectionNavMap[entry.target.id] || entry.target.id;
+      const active = document.querySelector(`.nav-links a[href="#${navId}"]`);
+      if (active) {
+        navItems.forEach(a => a.classList.remove('nav-active'));
+        active.classList.add('nav-active');
+      }
     }
   });
 }, { rootMargin: '-40% 0px -55% 0px' });
