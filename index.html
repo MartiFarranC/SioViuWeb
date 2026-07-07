@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Antonio:wght@300;400;700&family=Montserrat:wght@600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=2">
+  <link rel="stylesheet" href="css/style.css?v=4">
 </head>
 <body>
 
@@ -182,12 +182,6 @@
       </div>
 
       <a href="#" class="btn btn-outline-blue mostra-mes">Mostra'n més</a>
-
-      <!-- Accions dinàmiques -->
-      <h3 class="col-sub-h" style="margin-top:3rem">Accions</h3>
-      <ul class="accions-list" id="accions-list">
-        <li style="color:#888;font-size:.82rem;padding:.5rem 0">Carregant...</li>
-      </ul>
     </div>
   </section>
 
@@ -213,9 +207,9 @@
     <div class="footer-bottom container">
       <span>2026</span>
       <span>
-        <a href="#">Avís Legal</a>
-        <a href="#">Política de Privacitat</a>
-        <a href="#">Política de Cookies</a>
+        <a href="#" data-legal="avis-legal">Avís Legal</a>
+        <a href="#" data-legal="privacitat">Política de Privacitat</a>
+        <a href="#" data-legal="cookies">Política de Cookies</a>
       </span>
     </div>
   </footer>
@@ -240,7 +234,6 @@
       <div id="admin-step-form" style="display:none">
         <div class="admin-tabs">
           <button class="admin-tab active" data-tab="noticia">Notícies</button>
-          <button class="admin-tab" data-tab="accio">Accions</button>
         </div>
 
         <!-- NOTÍCIES -->
@@ -255,9 +248,13 @@
             <textarea id="a-cos" placeholder="Text de la notícia..."></textarea>
           </div>
           <div class="admin-field">
-            <label for="a-imatge">URL de la imatge</label>
-            <input type="url" id="a-imatge" placeholder="https://...">
-            <p class="admin-hint">Puja la foto a Google Drive o Imgur i enganxa l'enllaç directe.</p>
+            <label>Imatge</label>
+            <div class="admin-img-drop" id="admin-img-drop">
+              <input type="file" id="a-imatge-file" accept="image/jpeg,image/png,image/webp,image/gif">
+              <img id="a-imatge-preview" alt="previsualització" style="display:none">
+              <span id="a-imatge-info">📎 Clica o arrossega una imatge aquí</span>
+            </div>
+            <p class="admin-hint" id="a-imatge-status"></p>
           </div>
           <div class="admin-field">
             <label for="a-link">Enllaç extern</label>
@@ -275,37 +272,69 @@
           <div id="admin-noticies-list"><p style="color:#888;font-size:.8rem">Carregant...</p></div>
         </div>
 
-        <!-- ACCIONS -->
-        <div id="admin-panel-accio" style="display:none">
-          <h3 id="accio-form-h">NOVA ACCIÓ</h3>
-          <div class="admin-field">
-            <label for="ac-titol">Títol *</label>
-            <input type="text" id="ac-titol" placeholder="Nom de l'acció o event">
-          </div>
-          <div class="admin-field">
-            <label for="ac-data">Data *</label>
-            <input type="date" id="ac-data">
-          </div>
-          <div class="admin-field">
-            <label for="ac-link">Enllaç (opcional)</label>
-            <input type="url" id="ac-link" placeholder="https://...">
-          </div>
-          <p class="admin-err" id="admin-accio-err"></p>
-          <p class="admin-ok"  id="admin-accio-ok"></p>
-          <div class="admin-form-actions">
-            <button class="admin-btn" id="admin-accio-btn">Publicar acció</button>
-            <button class="admin-btn-secondary" id="admin-accio-cancel" style="display:none">Cancel·lar edició</button>
-          </div>
-
-          <hr class="admin-sep">
-          <h3>PUBLICADES</h3>
-          <div id="admin-accions-list"><p style="color:#888;font-size:.8rem">Carregant...</p></div>
-        </div>
       </div>
     </div>
   </div>
 
-  <script src="js/main.js?v=3"></script>
-  <script src="js/news.js?v=3"></script>
+  <!-- MODAL LEGAL -->
+  <div id="legal-modal" class="legal-overlay" role="dialog" aria-modal="true" style="display:none">
+    <div class="legal-box">
+      <button class="legal-close" id="legal-close" aria-label="Tancar">×</button>
+      <div id="legal-content"></div>
+    </div>
+  </div>
+
+  <script id="legal-avis-legal" type="text/legal">
+    <h2>Avís Legal</h2>
+    <h3>Titularitat del lloc web</h3>
+    <p>Responsable: Associació Sió Viu<br>Domicili social: Tarroja de Segarra (Lleida)<br>Correu electrònic: <a href="mailto:info@sioviu.com">info@sioviu.com</a></p>
+    <h3>Condicions d'ús</h3>
+    <p>L'accés i ús d'aquest lloc web és gratuït i no requereix registre. L'Associació Sió Viu es reserva el dret de modificar, sense previ avís, els continguts d'aquest lloc web.</p>
+    <h3>Propietat intel·lectual</h3>
+    <p>Els continguts d'aquest lloc web (textos, imatges, logotips i dissenys) són propietat de l'Associació Sió Viu o dels seus autors i estan protegits per la normativa de propietat intel·lectual vigent. Queda prohibida la seva reproducció total o parcial sense autorització expressa.</p>
+    <h3>Responsabilitat</h3>
+    <p>L'associació no es fa responsable dels danys derivats d'un ús indegut d'aquest lloc web ni dels continguts de tercers als quals s'hi pugui accedir mitjançant enllaços externs.</p>
+  </script>
+
+  <script id="legal-privacitat" type="text/legal">
+    <h2>Política de Privacitat</h2>
+    <h3>Responsable del tractament</h3>
+    <p>Associació Sió Viu · <a href="mailto:info@sioviu.com">info@sioviu.com</a> · Tarroja de Segarra (Lleida)</p>
+    <h3>Dades que es recullen</h3>
+    <p>Quan empleneu el <a href="https://docs.google.com/forms/d/e/1FAIpQLSe-_aBpPkeDNljORLU0OmRoRNFpzc9yJgrdznJEqAM4DNzeQg/viewform" target="_blank" rel="noopener">formulari d'adhesió</a> d'aquest lloc web (gestionat per Google Forms), les dades facilitades (nom, correu electrònic i qualsevol altra informació que proporcioneu voluntàriament) es tracten per gestionar la vostra sol·licitud i mantenir-vos informats sobre les activitats de l'associació.</p>
+    <h3>Finalitat i base legal</h3>
+    <p>Base legal: consentiment de l'interessat (art. 6.1.a RGPD).<br>Finalitat: gestió de membres i persones col·laboradores, i enviament d'informació sobre les activitats de l'associació.</p>
+    <h3>Conservació de les dades</h3>
+    <p>Les vostres dades es conservaran mentre siguin necessàries per a la finalitat indicada o fins que sol·liciteu la seva supressió.</p>
+    <h3>Comunicació a tercers</h3>
+    <p>Google LLC gestiona el formulari de recollida de dades (Google Forms). Consulteu la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Política de Privadesa de Google</a> per a més informació.</p>
+    <h3>Drets dels usuaris</h3>
+    <p>Podeu exercir els vostres drets d'accés, rectificació, supressió, oposició, limitació i portabilitat enviant un correu a <a href="mailto:info@sioviu.com">info@sioviu.com</a> indicant "Protecció de Dades" a l'assumpte.</p>
+    <p>Si considereu que el tractament no s'ajusta a la normativa vigent, podeu presentar una reclamació davant l'<a href="https://www.aepd.es" target="_blank" rel="noopener">Agència Espanyola de Protecció de Dades</a>.</p>
+  </script>
+
+  <script id="legal-cookies" type="text/legal">
+    <h2>Política de Cookies</h2>
+    <h3>Què és una cookie?</h3>
+    <p>Una cookie és un petit fitxer de text que s'emmagatzema al vostre dispositiu quan visiteu un lloc web, i serveix per recordar preferències o per permetre el funcionament de determinades funcionalitats.</p>
+    <h3>Cookies que utilitza aquest lloc web</h3>
+    <p><strong>Cookies tècniques de tercers (necessàries)</strong></p>
+    <ul>
+      <li><strong>Google Fonts:</strong> Aquest lloc web carrega tipografies des dels servidors de Google. Google pot emmagatzemar cookies associades a aquest servei. Consulteu la <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">política de privadesa de Google</a>.</li>
+      <li><strong>OpenStreetMap / Leaflet:</strong> El mapa interactiu carrega contingut des dels servidors d'OpenStreetMap. Consulteu la seva <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener">política de privadesa</a>.</li>
+    </ul>
+    <p><strong>Cookies pròpies</strong></p>
+    <p>Aquest lloc web no utilitza cookies pròpies d'analítica, màrqueting ni publicitat.</p>
+    <h3>Com gestionar les cookies</h3>
+    <p>Podeu configurar el vostre navegador per bloquejar o eliminar les cookies. Tingueu en compte que bloquejar certes cookies pot afectar el funcionament del lloc web.</p>
+    <ul>
+      <li><strong>Chrome:</strong> Configuració → Privadesa i seguretat → Cookies</li>
+      <li><strong>Firefox:</strong> Preferències → Privadesa i seguretat</li>
+      <li><strong>Safari:</strong> Preferències → Privadesa</li>
+    </ul>
+  </script>
+
+  <script src="js/main.js?v=4"></script>
+  <script src="js/news.js?v=8"></script>
 </body>
 </html>

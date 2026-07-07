@@ -4,7 +4,6 @@
 
 const SUPA_URL = 'https://kvpqemvhhprtyfzdmcjq.supabase.co';
 const SUPA_KEY = 'sb_publishable_FOX_rvKBWKzeif7movnuTA_9ImVIFzt';
-const MESOS_CA = ['Gen','Feb','Mar','Abr','Mai','Jun','Jul','Ago','Set','Oct','Nov','Des'];
 
 const supaHeaders = {
   apikey: SUPA_KEY,
@@ -23,6 +22,36 @@ function supaFetch(path, opts = {}) {
    PÀGINA PÚBLICA – carrega notícies i accions
    ═══════════════════════════════════════════ */
 
+const NOTICIES_LIMIT = 3;
+let noticiesData = [];
+
+function renderNoticies(expanded) {
+  const el = document.getElementById('noticies-dinamiques');
+  const btn = document.querySelector('.mostra-mes');
+  if (!el) return;
+  const visible = expanded ? noticiesData : noticiesData.slice(0, NOTICIES_LIMIT);
+  el.innerHTML = visible.map(n => `
+    <div class="noticia-card">
+      <div class="noticia-card-img">
+        ${n.imatge_url ? `<img src="${esc(n.imatge_url)}" alt="${esc(n.titol)}">` : ''}
+      </div>
+      <div class="noticia-card-body">
+        <h4 class="noticia-card-title">${esc(n.titol)}</h4>
+        ${n.cos ? `<p class="noticia-card-excerpt">${esc(n.cos).substring(0,120)}${n.cos.length>120?'…':''}</p>` : ''}
+        ${n.link ? `<a href="${esc(n.link)}" target="_blank" rel="noopener" class="arrow-link" style="font-size:.78rem;margin-top:.3rem">Llegir més →</a>` : ''}
+      </div>
+    </div>`).join('');
+  if (btn) {
+    if (noticiesData.length <= NOTICIES_LIMIT) {
+      btn.style.display = 'none';
+    } else {
+      btn.style.display = '';
+      btn.textContent = expanded ? "Mostra'n menys" : "Mostra'n més";
+      btn.dataset.expanded = expanded ? '1' : '0';
+    }
+  }
+}
+
 async function carregaNoticies() {
   const el = document.getElementById('noticies-dinamiques');
   if (!el) return;
@@ -31,48 +60,44 @@ async function carregaNoticies() {
     const res  = await supaFetch('/rest/v1/noticies?select=*&order=created_at.desc');
     const data = await res.json();
     if (!data.length) { el.innerHTML = '<p style="color:#888;font-size:.85rem">Properament...</p>'; return; }
-    el.innerHTML = data.map(n => `
-      <div class="noticia-card">
-        <div class="noticia-card-img">
-          ${n.imatge_url ? `<img src="${esc(n.imatge_url)}" alt="${esc(n.titol)}">` : ''}
-        </div>
-        <div class="noticia-card-body">
-          <h4 class="noticia-card-title">${esc(n.titol)}</h4>
-          ${n.cos ? `<p class="noticia-card-excerpt">${esc(n.cos).substring(0,120)}${n.cos.length>120?'…':''}</p>` : ''}
-          ${n.link ? `<a href="${esc(n.link)}" target="_blank" rel="noopener" class="arrow-link" style="font-size:.78rem;margin-top:.3rem">Llegir més →</a>` : ''}
-        </div>
-      </div>`).join('');
+    noticiesData = data;
+    renderNoticies(false);
   } catch { el.innerHTML = '<p style="color:#888;font-size:.85rem">Error carregant notícies.</p>'; }
 }
 
-async function carregaAccions() {
-  const el = document.getElementById('accions-list');
-  if (!el) return;
-  try {
-    const res  = await supaFetch('/rest/v1/accions?select=*&order=data.asc');
-    const data = await res.json();
-    if (!Array.isArray(data) || !data.length) {
-      el.innerHTML = '<li style="color:#888;font-size:.82rem;padding:.5rem 0">Properament...</li>'; return;
-    }
-    el.innerHTML = data.map(a => {
-      const d = new Date(a.data + 'T00:00:00');
-      return `
-        <li class="accio-item">
-          <div class="accio-cal">
-            <span class="accio-mes">${MESOS_CA[d.getMonth()]}</span>
-            <span class="accio-dia">${d.getDate()}</span>
-          </div>
-          <div class="accio-body">
-            <h5>${a.titol}</h5>
-            ${a.link ? `<a href="${a.link}" target="_blank" rel="noopener">Participa →</a>` : ''}
-          </div>
-        </li>`;
-    }).join('');
-  } catch { el.innerHTML = '<li style="color:#888;font-size:.82rem;padding:.5rem 0">Error carregant accions.</li>'; }
-}
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.querySelector('.mostra-mes');
+  if (btn) {
+    btn.style.display = 'none';
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      renderNoticies(btn.dataset.expanded !== '1');
+    });
+  }
+});
 
 carregaNoticies();
-carregaAccions();
+
+/* ── Supabase Storage upload ── */
+async function uploadImageToStorage(file) {
+  const ext = file.name.split('.').pop().toLowerCase();
+  const filename = `${Date.now()}-${Math.random().toString(36).slice(2,8)}.${ext}`;
+  const res = await fetch(`${SUPA_URL}/storage/v1/object/noticies/${filename}`, {
+    method: 'POST',
+    headers: {
+      apikey: SUPA_KEY,
+      Authorization: `Bearer ${SUPA_KEY}`,
+      'Content-Type': file.type,
+      'x-upsert': 'false'
+    },
+    body: file
+  });
+  if (!res.ok) {
+    const txt = await res.text();
+    throw new Error(txt);
+  }
+  return `${SUPA_URL}/storage/v1/object/public/noticies/${filename}`;
+}
 
 /* ═══════════════════════════════════════════
    MODAL ADMIN — triple-click al logo
@@ -122,7 +147,6 @@ carregaAccions();
       stepPwd.style.display  = 'none';
       stepForm.style.display = '';
       carregaAdminNoticies();
-      carregaAdminAccions();
       document.getElementById('a-titol').focus();
     } else {
       pwdErr.style.display = 'block';
@@ -132,16 +156,6 @@ carregaAccions();
   document.getElementById('admin-pwd-btn').addEventListener('click', verificaPwd);
   pwdInput.addEventListener('keydown', e => { if (e.key === 'Enter') verificaPwd(); });
 
-  /* ── Tabs ── */
-  document.querySelectorAll('.admin-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      const which = tab.dataset.tab;
-      document.getElementById('admin-panel-noticia').style.display = which === 'noticia' ? '' : 'none';
-      document.getElementById('admin-panel-accio').style.display   = which === 'accio'   ? '' : 'none';
-    });
-  });
 
   /* ════════════════════════════════
      NOTÍCIES CRUD
@@ -173,10 +187,18 @@ carregaAccions();
   function editarNoticia(id) {
     const n = noticiesCache[id];
     editingNoticiaId = id;
-    document.getElementById('a-titol').value  = n.titol   || '';
-    document.getElementById('a-cos').value    = n.cos     || '';
-    document.getElementById('a-imatge').value = n.imatge_url || '';
-    document.getElementById('a-link').value   = n.link    || '';
+    document.getElementById('a-titol').value = n.titol || '';
+    document.getElementById('a-cos').value   = n.cos   || '';
+    document.getElementById('a-link').value  = n.link  || '';
+    const prev = document.getElementById('a-imatge-preview');
+    const info = document.getElementById('a-imatge-info');
+    if (n.imatge_url) {
+      prev.src = n.imatge_url; prev.style.display = '';
+      info.textContent = 'Selecciona per canviar la imatge';
+    } else {
+      prev.style.display = 'none';
+      info.textContent = '📎 Clica o arrossega una imatge aquí';
+    }
     document.getElementById('noticia-form-h').textContent      = 'EDITAR NOTÍCIA';
     document.getElementById('admin-noticia-btn').textContent   = 'Actualitzar';
     document.getElementById('admin-noticia-cancel').style.display = '';
@@ -186,7 +208,16 @@ carregaAccions();
 
   async function eliminarNoticia(id) {
     if (!confirm('Eliminar aquesta notícia?')) return;
-    await supaFetch(`/rest/v1/noticies?id=eq.${id}`, { method: 'DELETE' });
+    const res = await supaFetch(`/rest/v1/noticies?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: { Prefer: 'count=exact' }
+    });
+    const range = res.headers.get('Content-Range') || '';
+    const count = parseInt(range.split('/')[1] ?? '-1', 10);
+    if (!res.ok || count === 0) {
+      alert('No s\'ha pogut eliminar.\n\nAfegeix una política DELETE a Supabase:\nSQL Editor → New query → Executa:\n\nCREATE POLICY "anon delete noticies" ON noticies FOR DELETE TO anon USING (true);');
+      return;
+    }
     resetNoticiaForm();
     carregaAdminNoticies();
     carregaNoticies();
@@ -194,7 +225,11 @@ carregaAccions();
 
   function resetNoticiaForm() {
     editingNoticiaId = null;
-    ['a-titol','a-cos','a-imatge','a-link'].forEach(id => document.getElementById(id).value = '');
+    ['a-titol','a-cos','a-link'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('a-imatge-file').value = '';
+    document.getElementById('a-imatge-preview').style.display = 'none';
+    document.getElementById('a-imatge-info').textContent = '📎 Clica o arrossega una imatge aquí';
+    document.getElementById('a-imatge-status').textContent = '';
     document.getElementById('noticia-form-h').textContent      = 'NOVA NOTÍCIA';
     document.getElementById('admin-noticia-btn').textContent   = 'Publicar';
     document.getElementById('admin-noticia-cancel').style.display = 'none';
@@ -204,19 +239,47 @@ carregaAccions();
 
   document.getElementById('admin-noticia-cancel').addEventListener('click', resetNoticiaForm);
 
+  /* previsualització en triar arxiu */
+  document.getElementById('a-imatge-file').addEventListener('change', function () {
+    const file = this.files[0]; if (!file) return;
+    const prev = document.getElementById('a-imatge-preview');
+    const info = document.getElementById('a-imatge-info');
+    const reader = new FileReader();
+    reader.onload = e => { prev.src = e.target.result; prev.style.display = ''; info.textContent = file.name; };
+    reader.readAsDataURL(file);
+  });
+
   document.getElementById('admin-noticia-btn').addEventListener('click', async () => {
-    const titol      = document.getElementById('a-titol').value.trim();
-    const cos        = document.getElementById('a-cos').value.trim();
-    const imatge_url = document.getElementById('a-imatge').value.trim() || null;
-    const link       = document.getElementById('a-link').value.trim()   || null;
+    const titol  = document.getElementById('a-titol').value.trim();
+    const cos    = document.getElementById('a-cos').value.trim();
+    const link   = document.getElementById('a-link').value.trim() || null;
+    const file   = document.getElementById('a-imatge-file').files[0];
+    const status = document.getElementById('a-imatge-status');
     const err = document.getElementById('admin-noticia-err');
     const ok  = document.getElementById('admin-noticia-ok');
     const btn = document.getElementById('admin-noticia-btn');
 
-    err.style.display = 'none'; ok.style.display = 'none';
+    err.style.display = 'none'; ok.style.display = 'none'; status.textContent = '';
     if (!titol || !cos) { err.textContent = 'Títol i Cos són obligatoris.'; err.style.display = 'block'; return; }
 
-    btn.disabled = true; btn.textContent = editingNoticiaId ? 'Actualitzant...' : 'Publicant...';
+    btn.disabled = true;
+
+    /* puja imatge si n'hi ha */
+    let imatge_url = editingNoticiaId ? (noticiesCache[editingNoticiaId]?.imatge_url || null) : null;
+    if (file) {
+      btn.textContent = 'Pujant imatge...';
+      try {
+        imatge_url = await uploadImageToStorage(file);
+        status.textContent = '✓ Imatge pujada';
+      } catch (e) {
+        err.textContent = 'Error pujant la imatge. Crea el bucket "noticies" a Supabase Storage.';
+        err.style.display = 'block';
+        btn.disabled = false; btn.textContent = editingNoticiaId ? 'Actualitzar' : 'Publicar';
+        return;
+      }
+    }
+
+    btn.textContent = editingNoticiaId ? 'Actualitzant...' : 'Publicant...';
     try {
       let res;
       if (editingNoticiaId) {
@@ -247,108 +310,6 @@ carregaAccions();
     }
   });
 
-  /* ════════════════════════════════
-     ACCIONS CRUD
-     ════════════════════════════════ */
-  let accionsCache = {};
-  let editingAccioId = null;
-
-  async function carregaAdminAccions() {
-    const el = document.getElementById('admin-accions-list');
-    el.innerHTML = '<p style="color:#888;font-size:.8rem">Carregant...</p>';
-    const res  = await supaFetch('/rest/v1/accions?select=id,titol,data,link&order=data.asc');
-    const data = await res.json();
-    accionsCache = {};
-    if (!Array.isArray(data) || !data.length) { el.innerHTML = '<p style="color:#888;font-size:.8rem">Cap acció publicada.</p>'; return; }
-    data.forEach(a => accionsCache[a.id] = a);
-    el.innerHTML = data.map(a => `
-      <div class="admin-list-item">
-        <div class="admin-list-info">
-          <h6>${a.titol}</h6>
-          <span>${a.data}</span>
-        </div>
-        <div class="admin-list-actions">
-          <button class="admin-btn-sm admin-btn-edit" data-id="${a.id}" data-type="accio-edit">Editar</button>
-          <button class="admin-btn-sm admin-btn-del"  data-id="${a.id}" data-type="accio-del">Eliminar</button>
-        </div>
-      </div>`).join('');
-  }
-
-  function editarAccio(id) {
-    const a = accionsCache[id];
-    editingAccioId = id;
-    document.getElementById('ac-titol').value = a.titol || '';
-    document.getElementById('ac-data').value  = a.data  || '';
-    document.getElementById('ac-link').value  = a.link  || '';
-    document.getElementById('accio-form-h').textContent       = 'EDITAR ACCIÓ';
-    document.getElementById('admin-accio-btn').textContent    = 'Actualitzar';
-    document.getElementById('admin-accio-cancel').style.display = '';
-    document.getElementById('admin-panel-accio').scrollIntoView({ behavior: 'smooth' });
-    document.getElementById('ac-titol').focus();
-  }
-
-  async function eliminarAccio(id) {
-    if (!confirm('Eliminar aquesta acció?')) return;
-    await supaFetch(`/rest/v1/accions?id=eq.${id}`, { method: 'DELETE' });
-    resetAccioForm();
-    carregaAdminAccions();
-    carregaAccions();
-  }
-
-  function resetAccioForm() {
-    editingAccioId = null;
-    ['ac-titol','ac-data','ac-link'].forEach(id => document.getElementById(id).value = '');
-    document.getElementById('accio-form-h').textContent       = 'NOVA ACCIÓ';
-    document.getElementById('admin-accio-btn').textContent    = 'Publicar acció';
-    document.getElementById('admin-accio-cancel').style.display = 'none';
-    document.getElementById('admin-accio-err').style.display  = 'none';
-    document.getElementById('admin-accio-ok').style.display   = 'none';
-  }
-
-  document.getElementById('admin-accio-cancel').addEventListener('click', resetAccioForm);
-
-  document.getElementById('admin-accio-btn').addEventListener('click', async () => {
-    const titol = document.getElementById('ac-titol').value.trim();
-    const data  = document.getElementById('ac-data').value;
-    const link  = document.getElementById('ac-link').value.trim() || null;
-    const err = document.getElementById('admin-accio-err');
-    const ok  = document.getElementById('admin-accio-ok');
-    const btn = document.getElementById('admin-accio-btn');
-
-    err.style.display = 'none'; ok.style.display = 'none';
-    if (!titol || !data) { err.textContent = 'Títol i Data són obligatoris.'; err.style.display = 'block'; return; }
-
-    btn.disabled = true; btn.textContent = editingAccioId ? 'Actualitzant...' : 'Publicant...';
-    try {
-      let res;
-      if (editingAccioId) {
-        res = await supaFetch(`/rest/v1/accions?id=eq.${editingAccioId}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' },
-          body: JSON.stringify({ titol, data, link })
-        });
-        ok.textContent = 'Acció actualitzada!';
-      } else {
-        res = await supaFetch('/rest/v1/accions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' },
-          body: JSON.stringify({ titol, data, link })
-        });
-        ok.textContent = 'Acció publicada!';
-      }
-      if (!res.ok) throw new Error(await res.text());
-      ok.style.display = 'block';
-      resetAccioForm();
-      carregaAdminAccions();
-      carregaAccions();
-    } catch (e) {
-      err.textContent = 'Error: ' + e.message; err.style.display = 'block';
-    } finally {
-      btn.disabled = false;
-      btn.textContent = editingAccioId ? 'Actualitzar' : 'Publicar acció';
-    }
-  });
-
   /* ── Delegació d'events per als botons de la llista ── */
   document.getElementById('admin-noticies-list').addEventListener('click', e => {
     const btn = e.target.closest('[data-type]');
@@ -356,14 +317,6 @@ carregaAccions();
     const id = btn.dataset.id;
     if (btn.dataset.type === 'noticia-edit') editarNoticia(id);
     if (btn.dataset.type === 'noticia-del')  eliminarNoticia(id);
-  });
-
-  document.getElementById('admin-accions-list').addEventListener('click', e => {
-    const btn = e.target.closest('[data-type]');
-    if (!btn) return;
-    const id = btn.dataset.id;
-    if (btn.dataset.type === 'accio-edit') editarAccio(id);
-    if (btn.dataset.type === 'accio-del')  eliminarAccio(id);
   });
 
 })();

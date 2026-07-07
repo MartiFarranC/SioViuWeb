@@ -153,3 +153,30 @@ if (document.fonts) {
   window.addEventListener('load', fitHeroText);
 }
 window.addEventListener('resize', fitHeroText);
+
+// ─── Modal legal (Avís Legal / Privacitat / Cookies) ───
+(function () {
+  const modal   = document.getElementById('legal-modal');
+  const content = document.getElementById('legal-content');
+  const closeBtn = document.getElementById('legal-close');
+  if (!modal) return;
+
+  function obreLegal(id) {
+    const tpl = document.getElementById('legal-' + id);
+    if (!tpl) return;
+    content.innerHTML = tpl.innerHTML;
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function tancaLegal() {
+    modal.style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-legal]').forEach(a => {
+    a.addEventListener('click', e => { e.preventDefault(); obreLegal(a.dataset.legal); });
+  });
+  closeBtn.addEventListener('click', tancaLegal);
+  modal.addEventListener('click', e => { if (e.target === modal) tancaLegal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') tancaLegal(); });
+})();
