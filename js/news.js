@@ -162,6 +162,7 @@ async function uploadImageToStorage(file) {
      ════════════════════════════════ */
   let noticiesCache = {};
   let editingNoticiaId = null;
+  let removeImatge = false;
 
   async function carregaAdminNoticies() {
     const el = document.getElementById('admin-noticies-list');
@@ -190,14 +191,19 @@ async function uploadImageToStorage(file) {
     document.getElementById('a-titol').value = n.titol || '';
     document.getElementById('a-cos').value   = n.cos   || '';
     document.getElementById('a-link').value  = n.link  || '';
+    document.getElementById('a-imatge-file').value = '';
+    document.getElementById('a-imatge-status').textContent = '';
     const prev = document.getElementById('a-imatge-preview');
     const info = document.getElementById('a-imatge-info');
+    const removeBtn = document.getElementById('a-imatge-remove');
     if (n.imatge_url) {
       prev.src = n.imatge_url; prev.style.display = '';
       info.textContent = 'Selecciona per canviar la imatge';
+      if (removeBtn) removeBtn.style.display = '';
     } else {
       prev.style.display = 'none';
       info.textContent = '📎 Clica o arrossega una imatge aquí';
+      if (removeBtn) removeBtn.style.display = 'none';
     }
     document.getElementById('noticia-form-h').textContent      = 'EDITAR NOTÍCIA';
     document.getElementById('admin-noticia-btn').textContent   = 'Actualitzar';
@@ -225,11 +231,13 @@ async function uploadImageToStorage(file) {
 
   function resetNoticiaForm() {
     editingNoticiaId = null;
+    removeImatge = false;
     ['a-titol','a-cos','a-link'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('a-imatge-file').value = '';
     document.getElementById('a-imatge-preview').style.display = 'none';
     document.getElementById('a-imatge-info').textContent = '📎 Clica o arrossega una imatge aquí';
     document.getElementById('a-imatge-status').textContent = '';
+    document.getElementById('a-imatge-remove').style.display = 'none';
     document.getElementById('noticia-form-h').textContent      = 'NOVA NOTÍCIA';
     document.getElementById('admin-noticia-btn').textContent   = 'Publicar';
     document.getElementById('admin-noticia-cancel').style.display = 'none';
@@ -239,9 +247,20 @@ async function uploadImageToStorage(file) {
 
   document.getElementById('admin-noticia-cancel').addEventListener('click', resetNoticiaForm);
 
+  /* botó treure imatge */
+  document.getElementById('a-imatge-remove').addEventListener('click', () => {
+    removeImatge = true;
+    document.getElementById('a-imatge-file').value = '';
+    document.getElementById('a-imatge-preview').style.display = 'none';
+    document.getElementById('a-imatge-info').textContent = '📎 Clica o arrossega una imatge aquí';
+    document.getElementById('a-imatge-remove').style.display = 'none';
+    document.getElementById('a-imatge-status').textContent = 'La imatge s\'eliminarà en guardar';
+  });
+
   /* previsualització en triar arxiu */
   document.getElementById('a-imatge-file').addEventListener('change', function () {
     const file = this.files[0]; if (!file) return;
+    removeImatge = false;
     const prev = document.getElementById('a-imatge-preview');
     const info = document.getElementById('a-imatge-info');
     const reader = new FileReader();
@@ -264,8 +283,10 @@ async function uploadImageToStorage(file) {
 
     btn.disabled = true;
 
-    /* puja imatge si n'hi ha */
-    let imatge_url = editingNoticiaId ? (noticiesCache[editingNoticiaId]?.imatge_url || null) : null;
+    /* determina imatge_url final */
+    let imatge_url = removeImatge ? null
+      : editingNoticiaId ? (noticiesCache[editingNoticiaId]?.imatge_url || null)
+      : null;
     if (file) {
       btn.textContent = 'Pujant imatge...';
       try {

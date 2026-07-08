@@ -11,10 +11,10 @@ a { text-decoration: none; }
 
 /* ─── VARIABLES ─── */
 :root {
-  --blau:       #2D3FE0;
+  --blau:       #0000CC;
   --blau-fosc:  #001f6b;
-  --groc:       #FFD200;
-  --verd-logo:  #7FFF00;
+  --groc:       #00E87A;
+  --verd-logo:  #00E87A;
   --vermell:    #CC0000;
   --blanc:      #ffffff;
   --gris-clar:  #f5f5f5;
@@ -58,8 +58,8 @@ section { padding: 3.5rem 0; }
 }
 .col-h {
   font-family: 'Antonio', 'Arial Narrow', Arial, sans-serif;
-  font-size: 1.4rem; font-weight: 700; color: var(--blau);
-  text-transform: uppercase; letter-spacing: .02em;
+  font-size: 1.8rem; font-weight: 700; color: var(--blau);
+  text-transform: none; letter-spacing: .02em;
   margin-bottom: .8rem;
 }
 
@@ -72,19 +72,20 @@ section { padding: 3.5rem 0; }
   background: transparent;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 2rem; height: 58px;
-  transition: background .3s;
+  transition: background .3s, box-shadow .3s;
 }
 #navbar.scrolled {
-  background: rgba(0, 15, 80, 0.92);
+  background: rgba(255,255,255,0.97);
+  box-shadow: 0 2px 14px rgba(0,0,40,.12);
   backdrop-filter: blur(8px);
 }
 .nav-left { display: flex; align-items: center; gap: .8rem; }
-.nav-left img { height: 120px; }
-.nav-desc { font-family: 'Montserrat', sans-serif; font-size: .65rem; font-weight: 900; color: var(--blau); line-height: 1.4; max-width: 420px; white-space: nowrap; }
+.nav-left img { height: 120px; mix-blend-mode: multiply; }
+.nav-desc { font-family: 'Montserrat', sans-serif; font-size: .72rem; font-weight: 700; color: var(--blau); line-height: 1.4; max-width: 420px; white-space: nowrap; }
 .nav-links { display: flex; gap: 2rem; align-items: center; }
 .nav-links li a {
-  font-family: 'Montserrat', sans-serif;
-  color: var(--blau); font-size: .78rem; font-weight: 900;
+  font-family: 'Antonio', 'Arial Narrow', Arial, sans-serif;
+  color: var(--blau); font-size: 1rem; font-weight: 700;
   letter-spacing: .07em; text-transform: uppercase;
   padding: .2rem 0; border-bottom: 2px solid transparent; transition: border-color .15s;
 }
@@ -135,10 +136,10 @@ section { padding: 3.5rem 0; }
 .hero-sub-bar {
   background: var(--blau); color: #fff;
   font-family: 'Montserrat', sans-serif;
-  text-align: center; font-size: 1.1rem; font-weight: 900;
+  text-align: center; font-size: 1.1rem; font-weight: 700;
   letter-spacing: .04em; padding: .75rem 2rem;
 }
-.hero-ajudans { color: var(--groc); font-weight: 900; margin-left: .5rem; }
+.hero-ajudans { color: var(--groc); font-weight: 700; margin-left: .5rem; }
 .hero-ajudans:hover { text-decoration: underline; }
 
 
@@ -146,9 +147,32 @@ section { padding: 3.5rem 0; }
    QUI SOM
    ═══════════════════════════════════════════ */
 .qui-som { background: #fff; }
+.qui-som .section-h { font-size: 3.2rem; }
 .qui-som-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
 .qui-som-grid p { font-family: 'Montserrat', sans-serif; font-size: .88rem; line-height: 1.75; color: var(--blau); }
 .qui-som-grid img { margin-top: 1rem; width: 100%; height: 260px; object-fit: cover; }
+
+/* ─── Territori carousel ─── */
+.territori-carousel { position: relative; margin-top: 1rem; width: 100%; height: 260px; }
+.territori-slides { position: relative; width: 100%; height: 100%; overflow: hidden; }
+.territori-slide {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; transition: opacity .7s ease;
+  margin-top: 0;
+}
+.territori-slide.active { opacity: 1; }
+.territori-dots {
+  position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 7px; z-index: 2;
+}
+.t-dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: rgba(255,255,255,.5); border: 1.5px solid rgba(255,255,255,.8);
+  cursor: pointer; padding: 0; transition: background .2s, transform .2s;
+}
+.t-dot:hover { background: rgba(255,255,255,.8); }
+.t-dot.active { background: #fff; transform: scale(1.25); }
 
 
 /* ═══════════════════════════════════════════
@@ -484,6 +508,11 @@ a.footer-contact-row:hover { text-decoration: underline; }
   transition: border-color .15s, color .15s;
 }
 .admin-btn-secondary:hover { border-color: #333; color: #333; }
+.admin-btn-remove-img {
+  background: none; border: none; color: #c0392b; font-size: .78rem;
+  cursor: pointer; padding: .2rem 0; text-decoration: underline;
+}
+.admin-btn-remove-img:hover { color: #922b21; }
 
 .admin-sep { border: none; border-top: 1px solid #eee; margin: 1.4rem 0; }
 

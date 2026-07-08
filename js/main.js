@@ -184,3 +184,34 @@ window.addEventListener('resize', fitHeroText);
   modal.addEventListener('click', e => { if (e.target === modal) tancaLegal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') tancaLegal(); });
 })();
+
+// ─── Territori carousel ───
+(function () {
+  const slides = Array.from(document.querySelectorAll('.territori-slide'));
+  const dots   = Array.from(document.querySelectorAll('.t-dot'));
+  if (!slides.length) return;
+  let current = 0;
+  let timer;
+
+  function goTo(idx) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = (idx + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+
+  function startTimer() {
+    timer = setInterval(() => goTo(current + 1), 4000);
+  }
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      clearInterval(timer);
+      goTo(i);
+      startTimer();
+    });
+  });
+
+  startTimer();
+})();

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Antonio:wght@300;400;700&family=Montserrat:wght@600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=4">
+  <link rel="stylesheet" href="css/style.css?v=10">
 </head>
 <body>
 
@@ -18,7 +18,7 @@
   <div class="hero-slide"></div>
   <nav id="navbar">
     <div class="nav-left">
-      <a href="#inici"><img src="images/logo-sioviu.png" alt="Sió Viu"></a>
+      <a href="#inici"><img src="images/grafic/LOGO_DEF-24.png" alt="Sió Viu"></a>
       <span class="nav-desc">Associació per la Defensa Ambiental Territorial<br>de Tarroja de Segarra, la Prenyanosa i pobles veïns</span>
     </div>
     <ul class="nav-links">
@@ -49,7 +49,18 @@
         <div>
           <h3 class="col-h">El Territori</h3>
           <p><strong>Tarroja de Segarra, la Prenyanosa i els pobles veïns</strong> conformen un entorn rural singular. Paisatges de secà vius i canviants amb les estacions, camps que parlen de la nostra història i un teixit humà fort que manté vius aquests petits nuclis que són casa nostra.</p>
-          <img src="images/territori.jpg" alt="Vista de Tarroja de Segarra" class="img-fluid">
+          <div class="territori-carousel">
+            <div class="territori-slides">
+              <img src="images/territori.jpg"             alt="Vista del territori" class="territori-slide active">
+              <img src="images/paisatges/poble1.jpeg"     alt="Poble afectat" class="territori-slide">
+              <img src="images/paisatges/poble2.jpeg"     alt="Poble afectat" class="territori-slide">
+            </div>
+            <div class="territori-dots">
+              <button class="t-dot active" data-idx="0" aria-label="Imatge 1"></button>
+              <button class="t-dot" data-idx="1" aria-label="Imatge 2"></button>
+              <button class="t-dot" data-idx="2" aria-label="Imatge 3"></button>
+            </div>
+          </div>
         </div>
         <div>
           <h3 class="col-h">La plataforma</h3>
@@ -255,6 +266,7 @@
               <span id="a-imatge-info">📎 Clica o arrossega una imatge aquí</span>
             </div>
             <p class="admin-hint" id="a-imatge-status"></p>
+            <button type="button" class="admin-btn-remove-img" id="a-imatge-remove" style="display:none">× Treure imatge</button>
           </div>
           <div class="admin-field">
             <label for="a-link">Enllaç extern</label>
@@ -334,7 +346,7 @@
     </ul>
   </script>
 
-  <script src="js/main.js?v=6"></script>
-  <script src="js/news.js?v=8"></script>
+  <script src="js/main.js?v=7"></script>
+  <script src="js/news.js?v=9"></script>
 </body>
 </html>
