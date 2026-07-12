@@ -345,6 +345,30 @@ section { padding: 3.5rem 0; }
   font-size: .85rem; font-weight: 600; color: var(--blau);
   line-height: 1.4; padding: .1rem 0;
 }
+.poblesvius-banner {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1.5rem; flex-wrap: wrap;
+  margin-top: 2.5rem; padding-top: 1.5rem;
+  border-top: 1px solid #e5e5e5;
+}
+.poblesvius-text {
+  font-family: 'Antonio', 'Arial Narrow', Arial, sans-serif;
+  font-size: 1.5rem; font-weight: 700; color: var(--blau); line-height: 1.2;
+  margin: 0;
+}
+.poblesvius-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0; border-radius: 4px; white-space: nowrap;
+  transition: transform .15s, filter .15s;
+  text-decoration: none;
+}
+.poblesvius-btn img {
+  display: block;
+  height: 48px;
+  width: auto;
+  max-width: 100%;
+}
+.poblesvius-btn:hover { transform: translateY(-1px); filter: brightness(1.03); }
 
 
 /* ═══════════════════════════════════════════
