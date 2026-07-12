@@ -78,6 +78,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
 carregaNoticies();
 
+/* ═══════════════════════════════════════════
+   ADHERITS AL MANIFEST – llista pública + comptador
+   ═══════════════════════════════════════════ */
+async function carregaAdherits() {
+  const el = document.getElementById('adherits-llista');
+  const countEl = document.getElementById('adherits-count');
+  if (!el) return;
+  try {
+    const res  = await supaFetch('/rest/v1/adherits?select=nom&order=nom.asc');
+    const data = await res.json();
+    if (countEl) countEl.textContent = Array.isArray(data) ? data.length : 0;
+    if (!Array.isArray(data) || !data.length) {
+      el.innerHTML = '<p style="color:#888;font-size:.85rem">Properament...</p>';
+      return;
+    }
+    el.innerHTML = data.map(a => `<div class="adherits-item">${esc(a.nom)}</div>`).join('');
+  } catch {
+    el.innerHTML = '<p style="color:#888;font-size:.85rem">Error carregant la llista.</p>';
+  }
+}
+
+carregaAdherits();
+
 /* ── Supabase Storage upload ── */
 async function uploadImageToStorage(file) {
   const ext = file.name.split('.').pop().toLowerCase();
@@ -338,6 +361,132 @@ async function uploadImageToStorage(file) {
     const id = btn.dataset.id;
     if (btn.dataset.type === 'noticia-edit') editarNoticia(id);
     if (btn.dataset.type === 'noticia-del')  eliminarNoticia(id);
+  });
+
+
+  /* ════════════════════════════════
+     PESTANYES (Notícies / Adherits)
+     ════════════════════════════════ */
+  document.querySelectorAll('.admin-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const which = tab.dataset.tab;
+      document.getElementById('admin-panel-noticia').style.display = which === 'noticia' ? '' : 'none';
+      document.getElementById('admin-panel-adherit').style.display = which === 'adherit' ? '' : 'none';
+      if (which === 'adherit') carregaAdminAdherits();
+    });
+  });
+
+
+  /* ════════════════════════════════
+     ADHERITS CRUD
+     ════════════════════════════════ */
+  let adheritsCache = {};
+  let editingAdheritId = null;
+
+  async function carregaAdminAdherits() {
+    const el = document.getElementById('admin-adherits-list');
+    el.innerHTML = '<p style="color:#888;font-size:.8rem">Carregant...</p>';
+    const res  = await supaFetch('/rest/v1/adherits?select=id,nom&order=nom.asc');
+    const data = await res.json();
+    adheritsCache = {};
+    if (!Array.isArray(data) || !data.length) { el.innerHTML = '<p style="color:#888;font-size:.8rem">Cap entitat adherida.</p>'; return; }
+    data.forEach(a => adheritsCache[a.id] = a);
+    el.innerHTML = data.map(a => `
+      <div class="admin-list-item">
+        <div class="admin-list-info"><h6>${esc(a.nom)}</h6></div>
+        <div class="admin-list-actions">
+          <button class="admin-btn-sm admin-btn-edit" data-id="${a.id}" data-type="adherit-edit">Editar</button>
+          <button class="admin-btn-sm admin-btn-del"  data-id="${a.id}" data-type="adherit-del">Eliminar</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function editarAdherit(id) {
+    const a = adheritsCache[id];
+    editingAdheritId = id;
+    document.getElementById('ad-nom').value = a.nom || '';
+    document.getElementById('adherit-form-h').textContent    = 'EDITAR ENTITAT';
+    document.getElementById('admin-adherit-btn').textContent = 'Actualitzar';
+    document.getElementById('admin-adherit-cancel').style.display = '';
+    document.getElementById('ad-nom').focus();
+  }
+
+  function resetAdheritForm() {
+    editingAdheritId = null;
+    document.getElementById('ad-nom').value = '';
+    document.getElementById('adherit-form-h').textContent    = 'NOVA ENTITAT';
+    document.getElementById('admin-adherit-btn').textContent = 'Afegir';
+    document.getElementById('admin-adherit-cancel').style.display = 'none';
+    document.getElementById('admin-adherit-err').style.display = 'none';
+    document.getElementById('admin-adherit-ok').style.display  = 'none';
+  }
+  document.getElementById('admin-adherit-cancel').addEventListener('click', resetAdheritForm);
+
+  async function eliminarAdherit(id) {
+    if (!confirm('Eliminar aquesta entitat?')) return;
+    const res = await supaFetch(`/rest/v1/adherits?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: { Prefer: 'count=exact' }
+    });
+    const count = parseInt((res.headers.get('Content-Range') || '').split('/')[1] ?? '-1', 10);
+    if (!res.ok || count === 0) {
+      alert('No s\'ha pogut eliminar.\n\nAfegeix una política DELETE a Supabase per a la taula "adherits".');
+      return;
+    }
+    resetAdheritForm();
+    carregaAdminAdherits();
+    carregaAdherits();
+  }
+
+  async function desaAdherit() {
+    const nom = document.getElementById('ad-nom').value.trim();
+    const err = document.getElementById('admin-adherit-err');
+    const ok  = document.getElementById('admin-adherit-ok');
+    const btn = document.getElementById('admin-adherit-btn');
+    err.style.display = 'none'; ok.style.display = 'none';
+    if (!nom) { err.textContent = 'El nom és obligatori.'; err.style.display = 'block'; return; }
+    btn.disabled = true;
+    try {
+      let res;
+      if (editingAdheritId) {
+        res = await supaFetch(`/rest/v1/adherits?id=eq.${editingAdheritId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+          body: JSON.stringify({ nom })
+        });
+        ok.textContent = 'Entitat actualitzada!';
+      } else {
+        res = await supaFetch('/rest/v1/adherits', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+          body: JSON.stringify({ nom })
+        });
+        ok.textContent = 'Entitat afegida!';
+      }
+      if (!res.ok) throw new Error(await res.text());
+      ok.style.display = 'block';
+      resetAdheritForm();
+      carregaAdminAdherits();
+      carregaAdherits();
+    } catch (e) {
+      err.textContent = 'Error: ' + e.message; err.style.display = 'block';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = editingAdheritId ? 'Actualitzar' : 'Afegir';
+    }
+  }
+
+  document.getElementById('admin-adherit-btn').addEventListener('click', desaAdherit);
+  document.getElementById('ad-nom').addEventListener('keydown', e => { if (e.key === 'Enter') desaAdherit(); });
+
+  document.getElementById('admin-adherits-list').addEventListener('click', e => {
+    const btn = e.target.closest('[data-type]');
+    if (!btn) return;
+    const id = btn.dataset.id;
+    if (btn.dataset.type === 'adherit-edit') editarAdherit(id);
+    if (btn.dataset.type === 'adherit-del')  eliminarAdherit(id);
   });
 
 })();
