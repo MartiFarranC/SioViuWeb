@@ -79,9 +79,10 @@ section { padding: 3.5rem 0; }
   box-shadow: 0 2px 14px rgba(0,0,40,.12);
   backdrop-filter: blur(8px);
 }
+#navbar.scrolled .nav-desc { color: var(--blau); text-shadow: none; }
 .nav-left { display: flex; align-items: center; gap: .8rem; }
 .nav-left img { height: 120px; mix-blend-mode: multiply; }
-.nav-desc { font-family: 'Montserrat', sans-serif; font-size: .72rem; font-weight: 700; color: var(--blau); line-height: 1.4; max-width: 420px; white-space: nowrap; }
+.nav-desc { font-family: 'Montserrat', sans-serif; font-size: .72rem; font-weight: 700; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.45); line-height: 1.4; max-width: 420px; white-space: nowrap; }
 .br-mobile { display: none; }
 .hero-brand { display: none; }
 .nav-links { display: flex; gap: 2rem; align-items: center; }
@@ -156,6 +157,7 @@ section { padding: 3.5rem 0; }
 .qui-som-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
 .qui-som-grid p { font-family: 'Montserrat', sans-serif; font-size: .88rem; line-height: 1.75; color: var(--blau); }
 .qui-som-grid img { margin-top: 1rem; width: 100%; height: 260px; object-fit: cover; }
+.qui-som-grid .territori-slides img { margin-top: 0; }
 
 /* ─── Territori carousel ─── */
 .territori-carousel { position: relative; margin-top: 1rem; width: 100%; height: 260px; }
@@ -434,6 +436,7 @@ a.footer-contact-row:hover { text-decoration: underline; }
     box-shadow: none;
     backdrop-filter: none;
   }
+  #navbar.scrolled .nav-desc { color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.5); }
   #navbar { align-items: center; justify-content: space-between; gap: .9rem; }
   .nav-left { display: flex; flex: 1 1 0; min-width: 0; align-items: center; }
   .nav-left > a { display: none; }
@@ -472,7 +475,7 @@ a.footer-contact-row:hover { text-decoration: underline; }
   .nav-links li a.nav-active { color: var(--verd-logo); }
   .nav-burger { display: flex; }
   .qui-som-grid, .projecte-grid, .projecte-images { grid-template-columns: 1fr; }
-  .qui-som-grid img.img-manifest { height: auto; object-fit: contain; }
+  .qui-som-grid img.img-manifest { height: 260px; object-fit: cover; }
   .noticies-cards-grid { grid-template-columns: 1fr; }
   .adherits-grid { grid-template-columns: repeat(2, 1fr); gap: .3rem 1rem; }
   .adherits-title { font-size: 1.6rem; }
