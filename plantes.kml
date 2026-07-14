@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document id="1IvtaGsys3OCDEsW55KK4ryHr0waZwV5O">
+	<name>Projectes biogàs</name>
+	<gx:CascadingStyle kml:id="__managed_style_0E8E18A9744096C15438_highlight">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_0E8E18A9744096C15438_normal">
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>2.66667</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_0F9EEC412B4096C1543E_highlight">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=d32f2f&amp;id=2322&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_0F9EEC412B4096C1543E_normal">
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=d32f2f&amp;id=2322&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>2.66667</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_0F9EEC412B4096C1543E">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_0F9EEC412B4096C1543E_normal</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_0F9EEC412B4096C1543E_highlight</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="__managed_style_085E52A32E4096C1543C">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_085E52A32E4096C1543C_normal</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_085E52A32E4096C1543C_highlight</styleUrl>
+		</Pair>
+	</StyleMap>
+	<gx:CascadingStyle kml:id="__managed_style_130E1A0FD34096C1543C_highlight">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=d32f2f&amp;id=2322&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_098A7D38944096C15440_highlight">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2f2fd3</color>
+				<width>4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>408383ee</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_130E1A0FD34096C1543C">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_130E1A0FD34096C1543C_normal</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_130E1A0FD34096C1543C_highlight</styleUrl>
+		</Pair>
+	</StyleMap>
+	<gx:CascadingStyle kml:id="__managed_style_098A7D38944096C15440_normal">
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2f2fd3</color>
+				<width>2.66667</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>408383ee</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_085E52A32E4096C1543C_normal">
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2f2fd3</color>
+				<width>2.66667</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>408383ee</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<gx:CascadingStyle kml:id="__managed_style_130E1A0FD34096C1543C_normal">
+		<Style>
+			<IconStyle>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=d32f2f&amp;id=2322&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2dc0fb</color>
+				<width>2.66667</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>40ffffff</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<StyleMap id="__managed_style_0E8E18A9744096C15438">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_0E8E18A9744096C15438_normal</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_0E8E18A9744096C15438_highlight</styleUrl>
+		</Pair>
+	</StyleMap>
+	<StyleMap id="__managed_style_098A7D38944096C15440">
+		<Pair>
+			<key>normal</key>
+			<styleUrl>#__managed_style_098A7D38944096C15440_normal</styleUrl>
+		</Pair>
+		<Pair>
+			<key>highlight</key>
+			<styleUrl>#__managed_style_098A7D38944096C15440_highlight</styleUrl>
+		</Pair>
+	</StyleMap>
+	<gx:CascadingStyle kml:id="__managed_style_085E52A32E4096C1543C_highlight">
+		<Style>
+			<IconStyle>
+				<scale>1.2</scale>
+				<Icon>
+					<href>https://earth.google.com/earth/document/icon?color=1976d2&amp;id=2000&amp;scale=4</href>
+				</Icon>
+				<hotSpot x="64" y="128" xunits="pixels" yunits="insetPixels"/>
+			</IconStyle>
+			<LabelStyle>
+			</LabelStyle>
+			<LineStyle>
+				<color>ff2f2fd3</color>
+				<width>4</width>
+			</LineStyle>
+			<PolyStyle>
+				<color>408383ee</color>
+			</PolyStyle>
+			<BalloonStyle>
+			</BalloonStyle>
+		</Style>
+	</gx:CascadingStyle>
+	<Placemark id="0E271BFCE940931C4E64">
+		<name>PLANTA 2 ABDA</name>
+		<LookAt>
+			<longitude>1.273361999406157</longitude>
+			<latitude>41.71308106972072</latitude>
+			<altitude>513.263912243439</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>2226.383826577803</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_085E52A32E4096C1543C</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						1.27237024963601,41.71328370676935,0 1.26862450867137,41.71458357417441,0 1.267101597373901,41.71209454023291,0 1.270330380698126,41.71169197238428,0 1.27237024963601,41.71328370676935,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="09521D478540931F75AC">
+		<name>PLANTA 1 NORTIBEN</name>
+		<LookAt>
+			<longitude>1.271219412290769</longitude>
+			<latitude>41.71336041932766</latitude>
+			<altitude>514.2804302652299</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>3132.891629915103</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_098A7D38944096C15440</styleUrl>
+		<Polygon>
+			<outerBoundaryIs>
+				<LinearRing>
+					<coordinates>
+						1.269222425170022,41.70919938950387,0 1.269468562707614,41.70797376277536,0 1.270617825329823,41.70797616795425,0 1.271492798055116,41.70787536851132,0 1.27266778873365,41.7072041898355,0 1.275186521732838,41.70689061788426,0 1.274688529869392,41.70781868259108,0 1.275074252127986,41.70887531337952,0 1.271164753491623,41.70916253417479,0 1.271110050967812,41.70985492026074,0 1.270317176251909,41.70965081239363,0 1.270234949104478,41.70903756217684,0 1.269222425170022,41.70919938950387,0 
+					</coordinates>
+				</LinearRing>
+			</outerBoundaryIs>
+		</Polygon>
+	</Placemark>
+	<Placemark id="02424AC68C409320EC90">
+		<name>PLANTA 1</name>
+		<LookAt>
+			<longitude>1.278709248091316</longitude>
+			<latitude>41.71580657057606</latitude>
+			<altitude>480.1661165099824</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>4038.721905667918</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_130E1A0FD34096C1543C</styleUrl>
+		<Point>
+			<coordinates>1.272249839692075,41.70830588526422,519.8573663159601</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="0CECC29CB2409321F7D0">
+		<name>PLANTA 2</name>
+		<LookAt>
+			<longitude>1.278709248091296</longitude>
+			<latitude>41.71580657023794</latitude>
+			<altitude>480.1661165099824</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>4038.721905667918</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_0F9EEC412B4096C1543E</styleUrl>
+		<Point>
+			<coordinates>1.269683162704587,41.71244378716704,512.1812869239329</coordinates>
+		</Point>
+	</Placemark>
+	<Placemark id="0673F2DA9C409323DFC4">
+		<name>Distància a Tarroja</name>
+		<LookAt>
+			<longitude>1.270396640299072</longitude>
+			<latitude>41.72070123132735</latitude>
+			<altitude>469.985908513258</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>8247.803245887626</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_0E8E18A9744096C15438</styleUrl>
+		<LineString>
+			<coordinates>
+				1.275390958692939,41.72992191422368,0 1.270382742956035,41.71397489790341,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark id="0E3D4FC40B409326669F">
+		<name>Distància Prenyanosa</name>
+		<LookAt>
+			<longitude>1.274567521782881</longitude>
+			<latitude>41.71639541057126</latitude>
+			<altitude>503.1900284422834</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>4418.972859081114</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_0E8E18A9744096C15438</styleUrl>
+		<LineString>
+			<coordinates>
+				1.275105843227782,41.70879564093689,0 1.288956514733683,41.71146412339716,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark id="01D65E62164093274728">
+		<name>Distància La Cardosa</name>
+		<LookAt>
+			<longitude>1.26410587141796</longitude>
+			<latitude>41.70724541644502</latitude>
+			<altitude>501.6998128649864</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>3359.771402003244</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_0E8E18A9744096C15438</styleUrl>
+		<LineString>
+			<coordinates>
+				1.25325708019163,41.70002594992869,0 1.269629794978508,41.70805805532819,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+	<Placemark id="0EF9E36B44409328FFE9">
+		<name>Distància Castellnou</name>
+		<LookAt>
+			<longitude>1.276356159229135</longitude>
+			<latitude>41.71525021305315</latitude>
+			<altitude>493.5324947526347</altitude>
+			<heading>0</heading>
+			<tilt>0</tilt>
+			<gx:fovy>35</gx:fovy>
+			<range>9002.209258661605</range>
+			<altitudeMode>absolute</altitudeMode>
+		</LookAt>
+		<styleUrl>#__managed_style_0E8E18A9744096C15438</styleUrl>
+		<LineString>
+			<coordinates>
+				1.274781807854268,41.70708474615626,0 1.296762128759659,41.70373351770037,0 
+			</coordinates>
+		</LineString>
+	</Placemark>
+</Document>
+</kml>

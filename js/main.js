@@ -68,15 +68,16 @@ function initMapa() {
   const PRENYANOSA = [41.7108, 1.2891];
 
   const map = L.map('mapa', {
-    center: TARROJA,
-    zoom: 12,
+    center: [41.715, 1.273],
+    zoom: 14,
     scrollWheelZoom: false,
     zoomControl: true
   });
 
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  // ── Satèl·lit pur (sense etiquetes, carreteres ni límits) ──
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     maxZoom: 19,
-    attribution: '© <a href="https://openstreetmap.org">OpenStreetMap</a>'
+    attribution: 'Imatgeria © Esri, Maxar, Earthstar Geographics'
   }).addTo(map);
 
   // Marcador principal: Tarroja de Segarra
@@ -113,7 +114,59 @@ function initMapa() {
     .addTo(map)
     .bindPopup('<b>La Prenyanosa</b><br>Municipi afectat');
 
+  // Polígons de les plantes + línies de distància (llegit del plantes.kml)
+  carregaKML(map);
+
   map.once('click', () => map.scrollWheelZoom.enable());
+}
+
+// ── Llegeix plantes.kml i dibuixa polígons, etiquetes i línies de distància ──
+function carregaKML(map) {
+  fetch('plantes.kml')
+    .then(r => r.text())
+    .then(txt => {
+      const xml = new DOMParser().parseFromString(txt, 'application/xml');
+      const tag = (el, name) => Array.from(el.getElementsByTagNameNS('*', name));
+      const toLatLngs = str => str.trim().split(/\s+/).filter(Boolean).map(p => {
+        const c = p.split(',');
+        return [parseFloat(c[1]), parseFloat(c[0])];   // KML és lng,lat → Leaflet vol lat,lng
+      });
+      const bounds = L.latLngBounds([]);
+
+      tag(xml, 'Placemark').forEach(pm => {
+        const name  = (tag(pm, 'name')[0]?.textContent || '').trim();
+        const poly  = tag(pm, 'Polygon')[0];
+        const line  = tag(pm, 'LineString')[0];
+        const point = tag(pm, 'Point')[0];
+
+        if (poly) {
+          const latlngs = toLatLngs(tag(poly, 'coordinates')[0].textContent);
+          L.polygon(latlngs, { color: '#CC0000', weight: 3, fillColor: '#CC0000', fillOpacity: .28 })
+            .addTo(map)
+            .bindPopup('<b style="color:#CC0000;">' + name + '</b>');
+          latlngs.forEach(ll => bounds.extend(ll));
+        } else if (line) {
+          const latlngs = toLatLngs(tag(line, 'coordinates')[0].textContent);
+          L.polyline(latlngs, { color: '#FFD200', weight: 3 })
+            .addTo(map)
+            .bindTooltip(name);
+          latlngs.forEach(ll => bounds.extend(ll));
+        } else if (point && /^PLANTA\s*\d/i.test(name)) {
+          const ll = toLatLngs(tag(point, 'coordinates')[0].textContent)[0];
+          L.marker(ll, {
+            interactive: false,
+            icon: L.divIcon({
+              className: '',
+              html: '<div style="background:#CC0000;color:#fff;font-family:Montserrat,sans-serif;font-weight:700;font-size:11px;padding:2px 7px;border-radius:3px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);">' + name + '</div>',
+              iconAnchor: [24, -4]
+            })
+          }).addTo(map);
+        }
+      });
+
+      if (bounds.isValid()) map.fitBounds(bounds, { padding: [25, 25] });
+    })
+    .catch(err => console.warn('No s\'ha pogut carregar plantes.kml', err));
 }
 
 function carregaLeaflet() {
