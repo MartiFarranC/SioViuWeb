@@ -38,7 +38,8 @@ function renderNoticies(expanded) {
       <div class="noticia-card-body">
         <h4 class="noticia-card-title">${esc(n.titol)}</h4>
         ${n.cos ? `<p class="noticia-card-excerpt">${esc(n.cos).substring(0,120)}${n.cos.length>120?'…':''}</p>` : ''}
-        ${n.link ? `<a href="${esc(n.link)}" target="_blank" rel="noopener" class="arrow-link" style="font-size:.78rem;margin-top:.3rem">Llegir més →</a>` : ''}
+        ${n.cos && n.cos.length > 120 ? `<button type="button" class="arrow-link noticia-readmore" data-id="${esc(String(n.id))}" style="font-size:.78rem;margin-top:.3rem;background:none;border:none;cursor:pointer;padding:0;text-align:left;font-family:inherit;">Llegir més →</button>` : ''}
+        ${n.link ? `<a href="${esc(n.link)}" target="_blank" rel="noopener" class="arrow-link" style="font-size:.78rem;margin-top:.3rem">Font externa ↗</a>` : ''}
       </div>
     </div>`).join('');
   if (btn) {
@@ -65,6 +66,22 @@ async function carregaNoticies() {
   } catch { el.innerHTML = '<p style="color:#888;font-size:.85rem">Error carregant notícies.</p>'; }
 }
 
+/* ── Modal per llegir el text complet d'una notícia ── */
+function obreNoticiaComplerta(id) {
+  const n = noticiesData.find(x => String(x.id) === String(id));
+  const modal   = document.getElementById('legal-modal');
+  const content = document.getElementById('legal-content');
+  if (!n || !modal || !content) return;
+  content.innerHTML = `
+    <h2>${esc(n.titol)}</h2>
+    ${n.imatge_url ? `<img src="${esc(n.imatge_url)}" alt="${esc(n.titol)}" style="width:100%;border-radius:4px;margin-bottom:1rem;">` : ''}
+    <p style="white-space:pre-wrap;">${esc(n.cos || '')}</p>
+    ${n.link ? `<p><a href="${esc(n.link)}" target="_blank" rel="noopener">Font externa →</a></p>` : ''}
+  `;
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const btn = document.querySelector('.mostra-mes');
   if (btn) {
@@ -72,6 +89,13 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.addEventListener('click', e => {
       e.preventDefault();
       renderNoticies(btn.dataset.expanded !== '1');
+    });
+  }
+  const grid = document.getElementById('noticies-dinamiques');
+  if (grid) {
+    grid.addEventListener('click', e => {
+      const btn = e.target.closest('.noticia-readmore');
+      if (btn) obreNoticiaComplerta(btn.dataset.id);
     });
   }
 });
