@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Antonio:wght@300;400;700&family=Montserrat:wght@600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=50">
+  <link rel="stylesheet" href="css/style.css?v=54">
 </head>
 <body>
 
@@ -21,7 +21,7 @@
   <nav id="navbar">
     <div class="nav-left">
       <a href="#inici"><img src="images/grafic/LOGO_DEF-24.png" alt="Sió Viu"></a>
-      <span class="nav-desc">Associació per la Defensa Ambiental Territorial<br>de Tarroja de Segarra, la Prenyanosa <br class="br-mobile">i pobles veïns</span>
+      <span class="nav-desc">Associació per la Defensa Ambiental Territorial <br>de Tarroja de Segarra, la Prenyanosa <br class="br-mobile">i pobles veïns</span>
     </div>
     <ul class="nav-links">
       <li><a href="#qui-som" class="nav-active">Qui Som</a></li>
@@ -33,12 +33,11 @@
       <span></span><span></span><span></span>
     </button>
   </nav>
-    <div class="hero-brand">
-      <img src="images/grafic/LOGO_DEF-24.png" alt="Sió Viu">
-      <span class="hero-brand-desc">Associació per la Defensa Ambiental Territorial de Tarroja de Segarra, la Prenyanosa i pobles veïns</span>
-    </div>
     <div class="hero-text">
-      <img src="images/grafic/macroplantes-26.png" alt="Aturem Macroplantes de Biogàs" class="hero-title-img">
+      <picture>
+        <source media="(max-width: 768px)" srcset="images/grafic/aturem_macroplantes_biogas_transparent%20(1).png">
+        <img src="images/grafic/macroplantes-26.png" alt="Aturem Macroplantes de Biogàs" class="hero-title-img">
+      </picture>
     </div>
   </header>
   <div class="hero-sub-bar">
@@ -155,7 +154,7 @@
           </div>
           <h4>Aportació per a la caixa de resistència: <strong>Fes una contribució puntual</strong></h4>
           <p class="bizum">Compte: ES81 3130 0001 9500 2044 3300</p>
-          <a href="#" class="icard-link">Click aquí per associar-te</a>
+          <a href="#" data-legal="donar-transferencia" class="icard-link">Click aquí per fer una donació</a>
         </div>
         <div class="icard">
           <div class="icard-icon">
@@ -337,6 +336,13 @@
     </div>
   </div>
 
+  <script id="legal-donar-transferencia" type="text/legal">
+    <h2>Donar per transferència</h2>
+    <p><strong>ES81 3130 0001 9500 2044 3300</strong></p>
+    <p><strong>Destinatari:</strong> Associació per la Defensa Ambiental Territorial<br>de Tarroja de Segarra, la Prenyanosa i pobles veïns</p>
+    <p>Un cop realitzada la transferència, si us plau, envia'ns el comprovant que et donarà el banc juntament amb les teves dades personals a l'email <a href="mailto:info@sioviu.com">info@sioviu.com</a>.</p>
+  </script>
+
   <script id="legal-avis-legal" type="text/legal">
     <h2>Avís Legal</h2>
     <h3>Titularitat del lloc web</h3>
@@ -393,6 +399,6 @@
   </script>
 
   <script src="js/main.js?v=24"></script>
-  <script src="js/news.js?v=10"></script>
+  <script src="js/news.js?v=11"></script>
 </body>
 </html>

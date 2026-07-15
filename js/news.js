@@ -84,18 +84,22 @@ carregaNoticies();
 async function carregaAdherits() {
   const el = document.getElementById('adherits-llista');
   const countEl = document.getElementById('adherits-count');
+  const titleEl = document.querySelector('.adherits-title');
   if (!el) return;
   try {
     const res  = await supaFetch('/rest/v1/adherits?select=nom&order=nom.asc');
     const data = await res.json();
-    if (countEl) countEl.textContent = Array.isArray(data) ? data.length : 0;
-    if (!Array.isArray(data) || !data.length) {
-      el.innerHTML = '<p style="color:#888;font-size:.85rem">Properament...</p>';
+    const count = Array.isArray(data) ? data.length : 0;
+    if (countEl) countEl.textContent = count;
+    if (titleEl) titleEl.style.display = count > 0 ? '' : 'none';
+    if (!count) {
+      el.innerHTML = '';
       return;
     }
     el.innerHTML = data.map(a => `<div class="adherits-item">${esc(a.nom)}</div>`).join('');
   } catch {
-    el.innerHTML = '<p style="color:#888;font-size:.85rem">Error carregant la llista.</p>';
+    if (titleEl) titleEl.style.display = 'none';
+    el.innerHTML = '';
   }
 }
 
