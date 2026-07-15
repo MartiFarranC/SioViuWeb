@@ -64,60 +64,43 @@ sections.forEach(s => observer.observe(s));
 function initMapa() {
   if (!document.getElementById('mapa')) return;
 
-  const TARROJA    = [41.7303, 1.2744];
-  const PRENYANOSA = [41.7108, 1.2891];
-
   const map = L.map('mapa', {
     center: [41.715, 1.273],
     zoom: 14,
     scrollWheelZoom: false,
-    zoomControl: true
+    zoomControl: true,
+    attributionControl: false
   });
 
-  // ── Satèl·lit pur (sense etiquetes, carreteres ni límits) ──
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19,
-    attribution: 'Imatgeria © Esri, Maxar, Earthstar Geographics'
+  // ── Satèl·lit pur (Google Earth / imatgeria de satèl·lit de Google) ──
+  L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
   }).addTo(map);
 
-  // Marcador principal: Tarroja de Segarra
-  const icTarroja = L.divIcon({
-    className: '',
-    html: `<div style="
-      width:32px;height:32px;background:#2D3FE0;
-      border:3px solid #fff;border-radius:50%;
-      display:flex;align-items:center;justify-content:center;
-      font-size:15px;box-shadow:0 2px 8px rgba(0,0,0,.5);">📍</div>`,
-    iconSize: [32, 32], iconAnchor: [16, 16]
-  });
-
-  // Marcador secundari
-  const icPoble = L.divIcon({
-    className: '',
-    html: `<div style="
-      width:12px;height:12px;background:#FFD200;
-      border:2px solid #003399;border-radius:50%;
-      box-shadow:0 1px 4px rgba(0,0,0,.4);"></div>`,
-    iconSize: [12, 12], iconAnchor: [6, 6]
-  });
-
-  L.marker(TARROJA, { icon: icTarroja })
-    .addTo(map)
-    .bindPopup(`
-      <b style="color:#2D3FE0;">Tarroja de Segarra</b><br>
-      Municipi afectat per les plantes de biogàs previstes<br>
-      <small style="color:#888;">Segarra, Lleida</small>
-    `)
-    .openPopup();
-
-  L.marker(PRENYANOSA, { icon: icPoble })
-    .addTo(map)
-    .bindPopup('<b>La Prenyanosa</b><br>Municipi afectat');
+  // ── Noms de pobles/ciutats i carreteres (fons transparent, per sobre del satèl·lit) ──
+  L.tileLayer('https://{s}.google.com/vt/lyrs=h&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+  }).addTo(map);
 
   // Polígons de les plantes + línies de distància (llegit del plantes.kml)
   carregaKML(map);
 
   map.once('click', () => map.scrollWheelZoom.enable());
+
+  // El contenidor del mapa pot canviar de mida diverses vegades mentre la
+  // pàgina acaba de carregar (imatges, fonts, reflow de la graella). Un
+  // ResizeObserver detecta el canvi real i recalcula/reencaixa sempre que calgui,
+  // sense haver d'endevinar temps d'espera.
+  const refit = () => {
+    map.invalidateSize();
+    if (map._plantesBounds && map._plantesBounds.isValid()) {
+      map.fitBounds(map._plantesBounds, { padding: [25, 25] });
+    }
+  };
+  const ro = new ResizeObserver(() => refit());
+  ro.observe(map.getContainer());
 }
 
 // ── Llegeix plantes.kml i dibuixa polígons, etiquetes i línies de distància ──
@@ -157,14 +140,31 @@ function carregaKML(map) {
             interactive: false,
             icon: L.divIcon({
               className: '',
-              html: '<div style="background:#CC0000;color:#fff;font-family:Montserrat,sans-serif;font-weight:700;font-size:11px;padding:2px 7px;border-radius:3px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.5);">' + name + '</div>',
-              iconAnchor: [24, -4]
+              html: `
+                <div style="display:flex; flex-direction:column; align-items:center; transform:translateY(-8px);">
+                  <div style="
+                    background:#CC0000; color:#fff;
+                    font-family:'Antonio','Arial Narrow',Arial,sans-serif;
+                    font-weight:700; font-size:13px; letter-spacing:.04em; text-transform:uppercase;
+                    padding:3px 10px; border-radius:4px; border:1.5px solid rgba(255,255,255,.85);
+                    white-space:nowrap; box-shadow:0 2px 6px rgba(0,0,0,.55);">${name}</div>
+                  <div style="
+                    width:0; height:0; margin-top:-1px;
+                    border-left:5px solid transparent; border-right:5px solid transparent;
+                    border-top:6px solid #CC0000;
+                    filter:drop-shadow(0 2px 1px rgba(0,0,0,.35));"></div>
+                </div>`,
+              iconAnchor: [24, 14]
             })
           }).addTo(map);
         }
       });
 
-      if (bounds.isValid()) map.fitBounds(bounds, { padding: [25, 25] });
+      if (bounds.isValid()) {
+        map._plantesBounds = bounds;
+        map.invalidateSize();
+        map.fitBounds(bounds, { padding: [25, 25] });
+      }
     })
     .catch(err => console.warn('No s\'ha pogut carregar plantes.kml', err));
 }
