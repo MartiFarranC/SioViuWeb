@@ -58,7 +58,7 @@ async function carregaNoticies() {
   if (!el) return;
   el.innerHTML = '<p style="color:#888;font-size:.85rem">Carregant notícies...</p>';
   try {
-    const res  = await supaFetch('/rest/v1/noticies?select=*&order=created_at.desc');
+    const res  = await supaFetch('/rest/v1/noticies?select=*&order=ordre.asc.nullslast,created_at.desc');
     const data = await res.json();
     if (!data.length) { el.innerHTML = '<p style="color:#888;font-size:.85rem">Properament...</p>'; return; }
     noticiesData = data;
@@ -215,25 +215,55 @@ async function uploadImageToStorage(file) {
   let editingNoticiaId = null;
   let removeImatge = false;
 
+  let adminNoticiesOrder = [];
+
   async function carregaAdminNoticies() {
     const el = document.getElementById('admin-noticies-list');
     el.innerHTML = '<p style="color:#888;font-size:.8rem">Carregant...</p>';
-    const res  = await supaFetch('/rest/v1/noticies?select=id,titol,cos,imatge_url,link,created_at&order=created_at.desc');
+    const res  = await supaFetch('/rest/v1/noticies?select=id,titol,cos,imatge_url,link,created_at,ordre&order=ordre.asc.nullslast,created_at.desc');
     const data = await res.json();
     noticiesCache = {};
-    if (!data.length) { el.innerHTML = '<p style="color:#888;font-size:.8rem">Cap notícia publicada.</p>'; return; }
+    if (!data.length) { el.innerHTML = '<p style="color:#888;font-size:.8rem">Cap notícia publicada.</p>'; adminNoticiesOrder = []; return; }
+
+    /* Si hi ha notícies sense ordre assignat (encara), els donem un ordre inicial */
+    if (data.some(n => n.ordre === null)) {
+      await Promise.all(data.map((n, i) => supaFetch(`/rest/v1/noticies?id=eq.${n.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' },
+        body: JSON.stringify({ ordre: i })
+      })));
+      data.forEach((n, i) => n.ordre = i);
+    }
+
+    adminNoticiesOrder = data;
     data.forEach(n => noticiesCache[n.id] = n);
-    el.innerHTML = data.map(n => `
+    el.innerHTML = data.map((n, i) => `
       <div class="admin-list-item">
         <div class="admin-list-info">
           <h6>${n.titol}</h6>
           <span>${new Date(n.created_at).toLocaleDateString('ca-ES')}</span>
         </div>
         <div class="admin-list-actions">
+          <button class="admin-btn-sm admin-btn-edit" data-id="${n.id}" data-type="noticia-up"   ${i===0 ? 'disabled' : ''} title="Mou amunt">▲</button>
+          <button class="admin-btn-sm admin-btn-edit" data-id="${n.id}" data-type="noticia-down" ${i===data.length-1 ? 'disabled' : ''} title="Mou avall">▼</button>
           <button class="admin-btn-sm admin-btn-edit" data-id="${n.id}" data-type="noticia-edit">Editar</button>
           <button class="admin-btn-sm admin-btn-del"  data-id="${n.id}" data-type="noticia-del">Eliminar</button>
         </div>
       </div>`).join('');
+  }
+
+  async function mouNoticia(id, direccio) {
+    const i = adminNoticiesOrder.findIndex(n => String(n.id) === String(id));
+    const j = i + direccio;
+    if (i === -1 || j < 0 || j >= adminNoticiesOrder.length) return;
+    const a = adminNoticiesOrder[i], b = adminNoticiesOrder[j];
+    const ordreA = a.ordre, ordreB = b.ordre;
+    await Promise.all([
+      supaFetch(`/rest/v1/noticies?id=eq.${a.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify({ ordre: ordreB }) }),
+      supaFetch(`/rest/v1/noticies?id=eq.${b.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' }, body: JSON.stringify({ ordre: ordreA }) })
+    ]);
+    carregaAdminNoticies();
+    carregaNoticies();
   }
 
   function editarNoticia(id) {
@@ -362,10 +392,12 @@ async function uploadImageToStorage(file) {
         });
         ok.textContent = 'Notícia actualitzada!';
       } else {
+        const ordres = adminNoticiesOrder.map(n => n.ordre).filter(o => o !== null && o !== undefined);
+        const novaOrdre = ordres.length ? Math.min(...ordres) - 1 : 0;
         res = await supaFetch('/rest/v1/noticies', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Prefer: 'return=minimal' },
-          body: JSON.stringify({ titol, cos, imatge_url, link })
+          body: JSON.stringify({ titol, cos, imatge_url, link, ordre: novaOrdre })
         });
         ok.textContent = 'Notícia publicada!';
       }
@@ -389,6 +421,8 @@ async function uploadImageToStorage(file) {
     const id = btn.dataset.id;
     if (btn.dataset.type === 'noticia-edit') editarNoticia(id);
     if (btn.dataset.type === 'noticia-del')  eliminarNoticia(id);
+    if (btn.dataset.type === 'noticia-up')   mouNoticia(id, -1);
+    if (btn.dataset.type === 'noticia-down') mouNoticia(id, 1);
   });
 
 

@@ -666,7 +666,7 @@ a.footer-contact-row:hover { text-decoration: underline; }
 }
 .admin-list-info h6 { font-size: .8rem; color: #111; margin-bottom: .1rem; }
 .admin-list-info span { font-size: .7rem; color: #888; }
-.admin-list-actions { display: flex; gap: .35rem; flex-shrink: 0; }
+.admin-list-actions { display: flex; gap: .35rem; flex-shrink: 0; flex-wrap: wrap; justify-content: flex-end; }
 
 .admin-btn-sm {
   background: none; border: 1.5px solid; border-radius: 4px;
