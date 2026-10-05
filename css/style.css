@@ -677,3 +677,54 @@ a.footer-contact-row:hover { text-decoration: underline; }
 .admin-btn-edit:hover { background: var(--blau); color: #fff; }
 .admin-btn-del  { border-color: #c00; color: #c00; }
 .admin-btn-del:hover  { background: #c00; color: #fff; }
+
+
+/* ═══════════════════════════════════════════
+   PÀGINES DELS POBLES (tarroja-de-segarra.html), segons la pàgina 2 del Canva
+   ═══════════════════════════════════════════ */
+#navbar.nav-solid {
+  background: rgba(255,255,255,0.97);
+  box-shadow: 0 2px 14px rgba(0,0,40,.12);
+  backdrop-filter: blur(8px);
+}
+#navbar.nav-solid .nav-desc { color: var(--blau); text-shadow: none; }
+.coneix { margin-top: .6rem; font-weight: 700; text-transform: uppercase; }
+.coneix a { color: var(--blau); text-decoration: underline; }
+.coneix a:hover { color: var(--blau-fosc); }
+
+.poble { padding-top: 58px; }
+.poble section { padding: 0; }
+.poble-container { max-width: 1242px; margin: 0 auto; padding: 0 1.5rem; }
+.poble-intro { padding: clamp(2rem, 3.6vw, 50px) 0 0; }
+.poble-h {
+  font-family: 'Antonio', 'Arial Narrow', Arial, sans-serif;
+  font-size: clamp(2.2rem, 4.39vw, 60px); font-weight: 700; line-height: 1.17;
+  text-transform: uppercase; color: var(--blau); letter-spacing: 0;
+}
+.poble-entradeta, .poble-col p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(.95rem, 1.564vw, 21.37px); line-height: 1.4; color: var(--blau);
+}
+.poble-entradeta { margin: clamp(.8rem, 1.6vw, 22px) 0 clamp(2rem, 5vw, 68px); }
+.poble-columnes {
+  display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.5rem, 3.6vw, 50px);
+  margin-top: clamp(1rem, 2.6vw, 36px); align-items: start;
+}
+.poble-col p { text-align: justify; hyphens: auto; }
+.poble-col p + p { margin-top: 1.4em; }
+.poble-col .poble-pregunta { margin-top: .6em; text-align: left; hyphens: none; }
+.poble-pregunta a {
+  font-family: 'Antonio', 'Arial Narrow', Arial, sans-serif;
+  font-size: clamp(1.5rem, 2.73vw, 37.33px); font-weight: 700; line-height: 1.17; color: var(--blau);
+}
+.poble-pregunta a:hover { text-decoration: underline; }
+.poble-fotos { padding: clamp(2rem, 4vw, 56px) 0 clamp(2rem, 4vw, 46px) !important; }
+.poble-fotos-grid { display: grid; grid-template-columns: 350fr 455fr 350fr; gap: 28px; }
+.poble-fotos-grid img { width: 100%; height: clamp(220px, 27.65vw, 378px); object-fit: cover; display: block; }
+
+@media (max-width: 768px) {
+  .poble-columnes { grid-template-columns: 1fr; }
+  .poble-col p { text-align: left; }
+  .poble-fotos-grid { grid-template-columns: 1fr; gap: 14px; }
+  .poble-fotos-grid img { height: 240px; }
+}
