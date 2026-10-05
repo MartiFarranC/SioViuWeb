@@ -728,3 +728,7 @@ a.footer-contact-row:hover { text-decoration: underline; }
   .poble-fotos-grid { grid-template-columns: 1fr; gap: 14px; }
   .poble-fotos-grid img { height: 240px; }
 }
+
+.enllac-poble { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.enllac-poble:hover { color: var(--blau-fosc); }
+.projecte .enllac-poble:hover { color: var(--groc); }
